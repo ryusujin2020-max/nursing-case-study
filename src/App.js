@@ -3,32 +3,30 @@ import {
   Activity, Wind, Thermometer, Heart, FileText, User, 
   Clipboard, Stethoscope, ChevronRight, X, Pill, 
   CheckCircle2, AlertTriangle, Syringe, 
-  ShieldAlert, Biohazard, ArrowUpRight,
+  ShieldAlert, Biohazard, ArrowUpRight, ArrowDownRight, 
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
-  Clock, CheckSquare, Plus, Layout, Book, Download
+  Clock, CheckSquare, Plus, Book, Layout
 } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, ComposedChart, Area, Bar, BarChart
+  ResponsiveContainer, ComposedChart, Area, Bar
 } from 'recharts';
 
-// --- 🎀 테마 설정 (Cool Pink & Professional High-Fidelity) ---
+// --- 🏥 테마 설정 (SMC Deep Blue Style) ---
 const theme = {
-  bgMain: 'bg-[#FDFBFD]', // Cool White Background
-  sidebar: 'bg-white border-r border-slate-200 z-50',
+  bgMain: 'bg-[#F0F4F8]', // Very Light Blue Gray Background
+  sidebar: 'bg-white border-r border-slate-200 z-50 shadow-sm',
   mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]',
   header: 'bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40',
-  primaryText: 'text-slate-800',
+  primaryText: 'text-slate-900',
   secondaryText: 'text-slate-500',
-  accentColor: '#E0BBE4', // Cool Lavender
-  highlight: '#F4E1F0', // Soft Pink Highlight
-  card: 'bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300',
-  buttonPrimary: 'bg-[#E0BBE4] text-white hover:bg-[#D291BC] shadow-sm transition-colors rounded-xl px-4 py-2 font-bold text-sm flex items-center gap-2',
-  buttonSecondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors rounded-xl px-4 py-2 font-bold text-sm flex items-center gap-2',
-  badge: 'px-2.5 py-0.5 rounded-full text-xs font-bold'
+  accentColor: '#005EB8', // SMC Blue (Deep Medical Blue)
+  card: 'bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300',
+  buttonPrimary: 'bg-[#005EB8] text-white hover:bg-[#004C99] shadow-sm transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
+  buttonSecondary: 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
 };
 
-// --- 1. 데이터 섹션 (Full Detail) ---
+// --- 1. 데이터 섹션 ---
 
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 37.5 },
@@ -180,46 +178,64 @@ const nursingProcess = [
 ];
 
 const literatureContent = [
-  { title: "CPFE (Combined Pulmonary Fibrosis and Emphysema)", content: "상엽의 기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군. 특징적으로 폐용적은 정상이지만 확산능(DLCO)이 심각하게 저하됨. 예후가 불량하며 폐고혈압 합병증 빈도가 높음." },
-  { title: "Pneumonia (폐렴) - ATS/IDSA 2019", content: "폐실질의 급성 염증. CPFE 등 기저질환자는 고위험군으로 분류되며, 초기 경험적 광범위 항생제(Ceftriaxone + Macrolide) 사용이 권고됨. 항생제 선택 전 혈액 및 객담 배양 검사 필수." },
-  { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. 면역억제제 사용 시 감염 위험 증가." }
+  { title: "CPFE (Combined Pulmonary Fibrosis and Emphysema)", content: "상엽의 기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군. 특징적으로 폐용적은 정상이지만 확산능(DLCO)이 심각하게 저하됨. [cite_start]예후가 불량하며 폐고혈압 합병증 빈도가 높음 [cite: 576-577, 602-608]." },
+  { title: "Pneumonia (폐렴) - ATS/IDSA 2019", content: "폐실질의 급성 염증. CPFE 등 기저질환자는 고위험군으로 분류되며, 초기 경험적 광범위 항생제(Ceftriaxone + Macrolide) 사용이 권고됨. [cite_start]항생제 선택 전 혈액 및 객담 배양 검사 필수 [cite: 599-601, 741-743]." },
+  { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. [cite_start]면역억제제 사용 시 감염 위험 증가 [cite: 578-579, 612-615]." }
+];
+
+const educationContent = [
+  {
+    title: "CPFE 환자의 호흡 재활 가이드",
+    content: "환자분은 폐기종과 폐섬유증이 동반된 CPFE 상태입니다. 평소 폐활량은 정상처럼 보일 수 있으나, 가스 교환 능력(DLCO 33%)이 심각하게 떨어져 있어 운동 시 산소포화도가 급격히 떨어질 수 있습니다.",
+    points: ["숨이 찰 정도의 격렬한 운동 금지", "매일 아침/운동 후 산소포화도 체크 (목표 > 92%)", "평지 걷기 위주로 운동하되, 계단은 천천히"]
+  },
+  {
+    title: "감염 예방 및 면역 관리",
+    content: "면역억제제(MTX) 복용 및 기저 폐질환으로 인해 감염에 매우 취약합니다. 폐렴 재발은 치명적일 수 있으므로 철저한 예방이 필요합니다.",
+    points: ["독감(인플루엔자) 및 폐렴구균 예방접종 필수", "사람 많은 곳 마스크 착용 생활화", "외출 후 반드시 손 씻기 및 가글"]
+  },
+  {
+    title: "퇴원 후 약물 복용 수칙",
+    content: "퇴원 후 경구 항생제(Levofloxacin)를 처방일수까지 정확히 복용해야 내성균 발생을 막을 수 있습니다. 류마티스 약물(MTX)은 12/09 외래 진료 시 재개 여부를 결정합니다.",
+    points: ["항생제는 증상이 없어도 끝까지 복용", "MTX는 의사 지시 전까지 자의적 복용 금지", "관절 통증 시 NSAIDs 대신 타이레놀 우선 복용"]
+  }
 ];
 
 // --- Sub-Components ---
 
 const VitalHistoryModal = ({ vital, data, onClose }) => {
   if (!vital) return null;
-  const keyMap = { 'BP (mmHg)': 'sbp', 'HR (bpm)': 'hr', 'RR (/min)': 'rr', 'SpO2 (%)': 'spo2', 'BT (℃)': 'bt' };
+  const keyMap = { 'BP': 'sbp', 'HR': 'hr', 'RR': 'rr', 'SpO2': 'spo2', 'BT': 'bt' };
   const dataKey = keyMap[vital.label];
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#E0BBE4] p-5 flex justify-between items-center text-white">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#005EB8] p-4 flex justify-between items-center text-white">
           <h3 className="font-bold text-lg flex items-center gap-2">
-            <Activity size={20} /> {vital.label} History
+            <Activity size={20} /> {vital.label} Detailed History
           </h3>
           <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
         </div>
         <div className="p-0 max-h-[60vh] overflow-y-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 text-slate-500 font-bold sticky top-0 border-b border-slate-100">
+            <thead className="bg-slate-100 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
               <tr>
-                <th className="p-4">Time</th>
-                <th className="p-4">Value</th>
-                <th className="p-4">Note</th>
+                <th className="p-3">Time</th>
+                <th className="p-3">Value</th>
+                <th className="p-3">Note</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {data.map((d, i) => (
-                <tr key={i} className="hover:bg-pink-50 transition-colors">
-                  <td className="p-4 text-slate-600 font-medium">{d.time}</td>
-                  <td className="p-4 font-bold text-[#D291BC] text-lg">
-                    {vital.label === 'BP (mmHg)' ? `${d.sbp}/${d.dbp}` : d[dataKey]} 
+                <tr key={i} className="hover:bg-slate-50 transition-colors">
+                  <td className="p-3 text-slate-600 font-medium">{d.time}</td>
+                  <td className="p-3 font-bold text-[#005EB8] text-base">
+                    {vital.label === 'BP' ? `${d.sbp}/${d.dbp}` : d[dataKey]} 
                   </td>
-                  <td className="p-4 text-xs text-slate-400">
-                    {i === 0 ? <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Adm</span> : 
-                     i === data.length - 1 ? <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full">Disch</span> : '-'}
+                  <td className="p-3 text-xs text-slate-400">
+                    {i === 0 ? <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Adm</span> : 
+                     i === data.length - 1 ? <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded">Disch</span> : '-'}
                   </td>
                 </tr>
               ))}
@@ -234,47 +250,47 @@ const VitalHistoryModal = ({ vital, data, onClose }) => {
 const RiskHistoryModal = ({ type, onClose }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/40 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#E0BBE4] p-5 flex justify-between items-center text-white">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#005EB8] p-4 flex justify-between items-center text-white">
           <h3 className="font-bold text-lg flex items-center gap-2">
             <ShieldAlert size={20}/> {type === 'fall' ? '낙상 위험 평가 상세' : '욕창 위험 평가 상세'}
           </h3>
-          <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
+          <button onClick={onClose}><X size={24}/></button>
         </div>
         <div className="p-6">
           {type === 'fall' ? (
             <div className="space-y-4">
-              <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+              <div className="flex justify-between items-end border-b border-slate-200 pb-2">
                 <span className="text-slate-500">총점 (Morse Fall Scale)</span>
                 <span className="text-3xl font-bold text-amber-500">35점 <span className="text-sm font-normal text-slate-400">/ 125</span></span>
               </div>
-              <ul className="space-y-3 text-sm text-slate-600">
-                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>낙상 경험</span><span className="font-bold">없음 (0)</span></li>
-                <li className="flex justify-between p-2 bg-amber-50 rounded-lg border border-amber-100"><span>이차 진단</span><span className="font-bold text-amber-600">있음 (15)</span></li>
-                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>보행 보조</span><span className="font-bold">침상 안정 (0)</span></li>
-                <li className="flex justify-between p-2 bg-amber-50 rounded-lg border border-amber-100"><span>정맥 수액</span><span className="font-bold text-amber-600">있음 (20)</span></li>
-                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>걸음걸이</span><span className="font-bold">정상 (0)</span></li>
-                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>의식 상태</span><span className="font-bold">명료 (0)</span></li>
+              <ul className="space-y-3 text-sm text-slate-700">
+                <li className="flex justify-between p-2 bg-slate-50 rounded"><span>낙상 경험</span><span className="font-bold">없음 (0)</span></li>
+                <li className="flex justify-between p-2 bg-amber-50 rounded border border-amber-100"><span>이차 진단</span><span className="font-bold text-amber-700">있음 (15)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded"><span>보행 보조</span><span className="font-bold">침상 안정 (0)</span></li>
+                <li className="flex justify-between p-2 bg-amber-50 rounded border border-amber-100"><span>정맥 수액</span><span className="font-bold text-amber-700">있음 (20)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded"><span>걸음걸이</span><span className="font-bold">정상 (0)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded"><span>의식 상태</span><span className="font-bold">명료 (0)</span></li>
               </ul>
-              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-xs text-amber-900">
                 <strong>💡 중재:</strong> 낙상 위험 표지판 부착, 침상 난간 올림 확인, 보호자 상주 교육 시행함.
               </div>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+              <div className="flex justify-between items-end border-b border-slate-200 pb-2">
                 <span className="text-slate-500">총점 (Braden Scale)</span>
-                <span className="text-3xl font-bold text-teal-500">22점 <span className="text-sm font-normal text-slate-400">/ 23</span></span>
+                <span className="text-3xl font-bold text-teal-600">22점 <span className="text-sm font-normal text-slate-400">/ 23</span></span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">감각인지</span><span className="font-bold">4 (장애없음)</span></div>
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">습기</span><span className="font-bold">4 (거의없음)</span></div>
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">활동성</span><span className="font-bold">4 (자주걸음)</span></div>
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">기동성</span><span className="font-bold">4 (제한없음)</span></div>
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">영양상태</span><span className="font-bold">3 (적당함)</span></div>
-                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">마찰/쏠림</span><span className="font-bold">3 (문제없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">감각인지</span><span className="font-bold">4 (장애없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">습기</span><span className="font-bold">4 (거의없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">활동성</span><span className="font-bold">4 (자주걸음)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">기동성</span><span className="font-bold">4 (제한없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">영양상태</span><span className="font-bold">3 (적당함)</span></div>
+                <div className="p-2 bg-slate-50 rounded"><span className="block text-xs text-slate-400">마찰/쏠림</span><span className="font-bold">3 (문제없음)</span></div>
               </div>
-              <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800">
+              <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded text-xs text-teal-900">
                 <strong>💡 평가:</strong> 욕창 발생 위험 없음 (No Risk). 피부 상태 Clear 함 유지 중.
               </div>
             </div>
@@ -289,37 +305,37 @@ const MedDetailModal = ({ med, onClose }) => {
   if (!med) return null;
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#E0BBE4] p-6 flex justify-between items-start text-white">
+      <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#005EB8] p-6 flex justify-between items-start text-white">
           <div>
             <h3 className="text-2xl font-bold">{med.name}</h3>
             <span className="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-md border border-white/30">
               {med.route} | {med.dose}
             </span>
           </div>
-          <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
+          <button onClick={onClose}><X size={24}/></button>
         </div>
         <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <div className="bg-slate-50 p-3 rounded border border-slate-200">
               <span className="text-xs font-bold text-slate-400">CLASS</span>
-              <p className="font-bold text-slate-700">{med.details.class}</p>
+              <p className="font-bold text-slate-800">{med.details.class}</p>
             </div>
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <div className="bg-slate-50 p-3 rounded border border-slate-200">
               <span className="text-xs font-bold text-slate-400">DOSE</span>
-              <p className="font-bold text-slate-700">{med.details.adultDose}</p>
+              <p className="font-bold text-slate-800">{med.details.adultDose}</p>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <h4 className="text-sm font-bold text-[#D291BC] uppercase mb-2">약리 기전</h4>
-            <p className="text-sm text-slate-600 leading-relaxed">{med.details.moa}</p>
+          <div>
+            <h4 className="text-sm font-bold text-[#005EB8] uppercase mb-2">약리 기전</h4>
+            <p className="text-sm text-slate-700 bg-blue-50 p-3 rounded border border-blue-100">{med.details.moa}</p>
           </div>
-          <div className="space-y-2">
-            <h4 className="text-sm font-bold text-rose-400 uppercase">부작용 & 주의사항</h4>
-            <div className="bg-rose-50 p-3 rounded-xl border border-rose-100 text-sm text-slate-600">
-                <p className="mb-2"><strong>부작용:</strong> {med.details.sideEffects}</p>
-                <p><strong>주의:</strong> {med.details.caution}</p>
-            </div>
+          <div>
+            <h4 className="text-sm font-bold text-rose-500 uppercase mb-2">부작용 & 주의사항</h4>
+            <ul className="text-sm text-slate-600 list-disc pl-5 space-y-1">
+              <li>{med.details.sideEffects}</li>
+              <li>{med.details.caution}</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -330,17 +346,16 @@ const MedDetailModal = ({ med, onClose }) => {
 const ReportViewerModal = ({ type, onClose }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-xl shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
           <h3 className="font-bold text-lg text-slate-700 flex items-center gap-2">
-            {type === 'PFT' ? <Wind className="text-teal-500"/> : <Activity className="text-rose-500"/>}
+            {type === 'PFT' ? <Wind className="text-teal-600"/> : <Activity className="text-rose-600"/>}
             {type === 'PFT' ? 'Pulmonary Function Test (PFT)' : 'Electrocardiogram (ECG)'}
           </h3>
           <button onClick={onClose}><X className="text-slate-400 hover:text-slate-600"/></button>
         </div>
         <div className="flex-1 bg-slate-100 p-4 md:p-8 overflow-y-auto flex justify-center">
           <div className="bg-white w-full max-w-2xl shadow-lg min-h-[600px] p-8 text-slate-800 text-sm border border-slate-200 font-serif">
-            {/* Report Header */}
             <div className="flex justify-between border-b-2 border-black pb-4 mb-6">
               <div>
                 <h1 className="text-xl font-bold font-serif">KUMC Medical Report</h1>
@@ -381,7 +396,6 @@ const ReportViewerModal = ({ type, onClose }) => {
                   <div>PR: 170</div>
                   <div>QRS: 82</div>
                   <div>QT/QTc: 273/426</div>
-                  <div>Axis: 79</div>
                 </div>
                 <div className="h-32 border border-slate-200 bg-pink-50/30 flex items-center justify-center text-pink-300 italic">
                   [Graph: Sinus Tachycardia Waveforms]
@@ -424,13 +438,13 @@ const ChartForNursingProcess = ({ data, chartKey }) => {
     }
     
     return (
-        <div className="bg-white p-4 rounded-xl border border-slate-100 mt-4">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 mt-4 shadow-sm">
             <p className="text-xs font-bold text-slate-400 uppercase mb-2">{chartConfig.title}</p>
             <div className="h-32">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={slicedData}> 
-                  <XAxis dataKey="date" fontSize={8} interval={0} stroke="#cbd5e1" hide={true}/>
-                  <YAxis yAxisId={chartConfig.yAxisId} fontSize={8} stroke="#cbd5e1" width={20} domain={chartConfig.domain}/>
+                  <XAxis dataKey="date" fontSize={8} interval={0} stroke="#94a3b8" hide={true}/>
+                  <YAxis yAxisId={chartConfig.yAxisId} fontSize={8} stroke="#94a3b8" width={20} domain={chartConfig.domain}/>
                   <Tooltip contentStyle={{fontSize:'10px', padding: '5px'}}/>
                   {chartConfig.keys.map((k, i) => (
                       <Line key={i} yAxisId={chartConfig.yAxisId} type="monotone" dataKey={k.key} stroke={k.color} name={k.name} strokeWidth={2} dot={{r:2}}/>
@@ -455,7 +469,7 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
   );
 
   return (
-    <div ref={ref} className="bg-white p-12 md:p-16 max-w-[210mm] mx-auto min-h-[297mm] text-slate-900 text-sm font-serif shadow-lg print:shadow-none print:w-full">
+    <div ref={ref} className="bg-white p-12 md:p-16 max-w-[210mm] mx-auto min-h-[297mm] text-slate-900 text-sm font-serif shadow-none print:w-full">
       <style type="text/css" media="print">
         {`
           @page { size: A4; margin: 15mm; }
@@ -525,8 +539,8 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
                   <XAxis dataKey="date" fontSize={10}/>
                   <YAxis yAxisId="left" fontSize={10} label={{value:'WBC/CRP', angle:-90, position:'insideLeft', fontSize:10}}/>
                   <YAxis yAxisId="right" orientation="right" domain={[0, 15]} fontSize={10} label={{value:'Hb', angle:90, position:'insideRight', fontSize:10}}/>
-                  <Area yAxisId="left" type="monotone" dataKey="crp" fill="#ffe4e6" stroke="#f43f5e" name="CRP"/>
-                  <Line yAxisId="right" type="monotone" dataKey="hb" stroke="#6366f1" name="Hb" strokeWidth={2}/>
+                  <Area yAxisId="left" type="monotone" dataKey="crp" fill="#e2e8f0" stroke="#64748b" name="CRP"/>
+                  <Line yAxisId="right" type="monotone" dataKey="hb" stroke="#0d9488" name="Hb" strokeWidth={2}/>
               </ComposedChart>
             </ResponsiveContainer>
         </div>
@@ -620,9 +634,9 @@ const NursingCaseStudyApp = () => {
     <div className={`min-h-screen ${theme.bgMain} font-sans text-slate-800 flex flex-col md:flex-row pb-16 md:pb-0`}>
       {/* Sidebar (Desktop) */}
       <aside className={`w-64 ${theme.sidebar} flex-col fixed h-full z-30 hidden md:flex print:hidden`}>
-        <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-          <div className="bg-[#E0BBE4] p-2 rounded-lg text-white"><Database size={20}/></div>
-          <span className="font-bold text-lg text-slate-700">Case Archive</span>
+        <div className="p-6 border-b border-slate-200 flex items-center gap-3">
+          <div className="bg-[#005EB8] p-2 rounded-lg text-white"><Database size={20}/></div>
+          <span className="font-bold text-lg text-slate-800">Case Archive</span>
         </div>
         <nav className="p-4 space-y-1 flex-1">
           {[
@@ -632,18 +646,19 @@ const NursingCaseStudyApp = () => {
             { id: 'literature', label: 'Literature Review', icon: Book },
             { id: 'risk', label: 'Risk Assess', icon: ShieldAlert },
             { id: 'reports', label: 'Reports (Labs/PFT)', icon: FileText },
+            { id: 'education', label: 'Discharge Edu', icon: BookOpen },
             { id: 'report', label: 'Final Report (Print)', icon: Printer },
           ].map(item => (
             <button key={item.id} onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                activeTab === item.id ? 'bg-[#FFF0F5] text-[#D291BC]' : 'text-slate-500 hover:bg-slate-50'
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                activeTab === item.id ? 'bg-[#E6F0F9] text-[#005EB8] border border-[#005EB8]/20' : 'text-slate-500 hover:bg-slate-50'
               }`}
             >
               <item.icon size={18}/> {item.label}
             </button>
           ))}
         </nav>
-        <div className="p-5 border-t border-slate-100">
+        <div className="p-5 border-t border-slate-200">
           <p className="text-xs font-bold text-slate-800">202221920 류수진</p>
           <p className="text-[10px] text-slate-400">Nursing Student</p>
         </div>
@@ -654,7 +669,7 @@ const NursingCaseStudyApp = () => {
         <header className={`${theme.header} px-4 md:px-8 py-4 flex justify-between items-center print:hidden`}>
           <div>
             <h1 className="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2">
-              <User className="text-[#D291BC]" size={20}/> 김정숙 (F/51)
+              <User className="text-[#005EB8]" size={20}/> 김정숙 (F/51)
               <span className="text-xs font-normal text-slate-400 border border-slate-200 px-2 py-0.5 rounded ml-2 hidden md:inline">ID: 02519326</span>
             </h1>
             <p className="text-xs text-slate-500 mt-1">Dx: Pneumonia, CPFE, Sjogren</p>
@@ -673,32 +688,32 @@ const NursingCaseStudyApp = () => {
             <div className="space-y-6 animate-fade-in">
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
                 {[
-                  { label: 'BP (mmHg)', val: '120/80', icon: Activity, color: 'text-slate-600' },
-                  { label: 'HR (bpm)', val: '75', icon: Heart, color: 'text-rose-500' },
-                  { label: 'RR (/min)', val: '20', icon: Wind, color: 'text-teal-500' },
-                  { label: 'SpO2 (%)', val: '95', icon: Droplet, color: 'text-sky-500' },
-                  { label: 'BT (℃)', val: '36.4', icon: Thermometer, color: 'text-amber-500' },
+                  { label: 'BP', val: '120/80', unit: 'mmHg', icon: Activity, color: 'text-slate-600' },
+                  { label: 'HR', val: '75', unit: 'bpm', icon: Heart, color: 'text-rose-500' },
+                  { label: 'RR', val: '20', unit: '/min', icon: Wind, color: 'text-teal-500' },
+                  { label: 'SpO2', val: '95', unit: '%', icon: Droplet, color: 'text-sky-500' },
+                  { label: 'BT', val: '36.4', unit: '℃', icon: Thermometer, color: 'text-amber-500' },
                 ].map((v, i) => (
-                  <div key={i} onClick={() => setSelectedVital(v)} className={`${theme.card} p-4 md:p-5 group cursor-pointer hover:border-[#E0BBE4]`}>
+                  <div key={i} onClick={() => setSelectedVital(v)} className={`${theme.card} p-4 md:p-5 group cursor-pointer hover:border-[#005EB8]`}>
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase">{v.label}</span>
                       <v.icon size={16} className={`${v.color} opacity-70`}/>
                     </div>
-                    <div className={`text-xl md:text-2xl font-bold ${v.color}`}>{v.val}</div>
+                    <div className={`text-xl md:text-2xl font-bold ${v.color}`}>{v.val} <span className="text-xs text-slate-400 font-normal">{v.unit}</span></div>
                   </div>
                 ))}
               </div>
               <div className="grid lg:grid-cols-2 gap-6">
                 <div className={theme.card + " p-4 md:p-6"}>
-                  <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm md:text-base"><Activity size={18} className="text-[#D291BC]"/> Vital Signs Trend</h3>
+                  <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm md:text-base"><Activity size={18} className="text-[#005EB8]"/> Vital Signs Trend</h3>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={vitalData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0"/>
-                        <XAxis dataKey="time" fontSize={10} interval={1} stroke="#cbd5e1"/>
-                        <YAxis yAxisId="left" domain={[60, 150]} fontSize={10} stroke="#cbd5e1" width={30}/>
-                        <YAxis yAxisId="right" orientation="right" domain={[35, 40]} fontSize={10} stroke="#cbd5e1" width={30}/>
-                        <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}}/>
+                        <XAxis dataKey="time" fontSize={10} interval={1} stroke="#94a3b8"/>
+                        <YAxis yAxisId="left" domain={[60, 150]} fontSize={10} stroke="#94a3b8" width={30}/>
+                        <YAxis yAxisId="right" orientation="right" domain={[35, 40]} fontSize={10} stroke="#94a3b8" width={30}/>
+                        <Tooltip contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}}/>
                         <Legend wrapperStyle={{fontSize: '11px', paddingTop: '10px'}}/>
                         <Line yAxisId="left" type="monotone" dataKey="sbp" stroke="#94a3b8" name="SBP" dot={false} strokeWidth={1.5} strokeDasharray="5 5"/>
                         <Line yAxisId="left" type="monotone" dataKey="hr" stroke="#f43f5e" name="HR" dot={false} strokeWidth={2}/>
@@ -714,18 +729,157 @@ const NursingCaseStudyApp = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <ComposedChart data={labData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0"/>
-                        <XAxis dataKey="date" fontSize={10} stroke="#cbd5e1"/>
-                        <YAxis yAxisId="left" fontSize={10} stroke="#cbd5e1" label={{value:'WBC/CRP', angle:-90, position:'insideLeft', fontSize:9}}/>
-                        <YAxis yAxisId="right" orientation="right" domain={[0, 16]} fontSize={10} stroke="#cbd5e1" label={{value:'Hb/K', angle:90, position:'insideRight', fontSize:9}}/>
+                        <XAxis dataKey="date" fontSize={10} stroke="#94a3b8"/>
+                        <YAxis yAxisId="left" fontSize={10} stroke="#94a3b8" label={{value:'WBC/CRP', angle:-90, position:'insideLeft', fontSize:9}}/>
+                        <YAxis yAxisId="right" orientation="right" domain={[0, 16]} fontSize={10} stroke="#94a3b8" label={{value:'Hb/K', angle:90, position:'insideRight', fontSize:9}}/>
                         <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}}/>
                         <Legend wrapperStyle={{fontSize: '11px', paddingTop: '10px'}}/>
                         <Bar yAxisId="left" dataKey="wbc" fill="#cbd5e1" name="WBC" barSize={20} radius={[4,4,0,0]}/>
-                        <Area yAxisId="left" type="monotone" dataKey="crp" fill="#ffe4e6" stroke="#f43f5e" name="CRP"/>
-                        <Line yAxisId="right" type="monotone" dataKey="hb" stroke="#6366f1" name="Hb" strokeWidth={2} dot={{r:3}}/>
-                        <Line yAxisId="right" type="monotone" dataKey="k" stroke="#10b981" name="K" strokeWidth={2} dot={{r:3}}/>
+                        <Area yAxisId="left" type="monotone" dataKey="crp" fill="#e2e8f0" stroke="#64748b" name="CRP"/>
+                        <Line yAxisId="right" type="monotone" dataKey="hb" stroke="#0d9488" name="Hb" strokeWidth={2} dot={{r:3}}/>
+                        <Line yAxisId="right" type="monotone" dataKey="k" stroke="#14b8a6" name="K" strokeWidth={2} dot={{r:3}}/>
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MEDS TAB */}
+          {activeTab === 'meds' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <Clock className="text-[#005EB8]"/> Medication Timeline
+                </h3>
+                <div className="flex min-w-[600px] justify-between relative pt-4 pb-2 px-4">
+                  <div className="absolute top-7 left-4 right-4 h-0.5 bg-slate-200 -z-10"></div>
+                  {medTimeline.map((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center gap-3 w-1/5 text-center group">
+                      <div className={`w-6 h-6 rounded-full border-4 border-white shadow-sm flex items-center justify-center z-10 ${
+                        item.type === 'start' ? 'bg-blue-500' : item.type === 'alert' ? 'bg-rose-500' : item.type === 'maintain' ? 'bg-slate-400' : item.type === 'change' ? 'bg-emerald-500' : 'bg-violet-500'
+                      }`}></div>
+                      <div>
+                        <div className="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full mb-1">{item.date}</div>
+                        <div className="text-[10px] text-slate-500 font-medium bg-white p-1 rounded border border-slate-200 shadow-sm">{item.event}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-4">
+                {medicationList.map((med) => (
+                  <div key={med.id} onClick={() => setSelectedMed(med)} className={`${theme.card} p-5 flex justify-between items-center cursor-pointer border-l-4 border-l-[#005EB8]`}>
+                    <div className="flex items-center gap-4">
+                      <div className={`p-3 rounded-lg ${med.route === 'IV' ? 'bg-rose-50 text-rose-600' : med.route === 'PO' ? 'bg-amber-50 text-amber-600' : 'bg-sky-50 text-sky-600'}`}>
+                        {med.route === 'IV' ? <Syringe size={20}/> : med.route === 'PO' ? <Pill size={20}/> : <Wind size={20}/>}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-base">{med.name}</h4>
+                        <p className="text-xs text-slate-500 font-medium">{med.route} | {med.dose}</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-300"/>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* NURSING TAB */}
+          {activeTab === 'nursing' && (
+            <div className="space-y-8 animate-fade-in">
+              {nursingProcess.map((np) => (
+                <div key={np.id} className={`${theme.card} overflow-hidden border-t-4 border-t-[#005EB8]`}>
+                  <div className="bg-slate-50 p-6 border-b border-slate-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-bold bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-600">진단#{np.id}</span>
+                      <span className="text-xs text-slate-400">{np.time}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-800">{np.diagnosis}</h3>
+                  </div>
+                  <div className="p-6 grid md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Assessment</h4>
+                        <p className="text-sm text-slate-700 mb-1"><strong className="text-[#005EB8]">S:</strong> {np.assessment.S}</p>
+                        <p className="text-sm text-slate-700"><strong className="text-[#005EB8]">O:</strong> {np.assessment.O}</p>
+                      </div>
+                      <div className="space-y-6">
+                          <ChartForNursingProcess data={labData} chartKey={np.chartKey}/>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Goals</h4>
+                        <ul className="space-y-2">
+                          <li className="text-sm text-slate-700 flex gap-2"><span className="text-[#005EB8] font-bold">단기:</span> {np.goals.short}</li>
+                          <li className="text-sm text-slate-700 flex gap-2"><span className="text-[#005EB8] font-bold">장기:</span> {np.goals.long}</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-500 uppercase mb-2 flex items-center gap-1">Rationale</h4>
+                        <p className="text-xs text-slate-600 mb-2 leading-relaxed bg-slate-50 p-3 rounded-lg"><strong>사유:</strong> {np.rationale}</p>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-500 uppercase mb-2 flex items-center gap-1"><CheckSquare size={12}/> Implementation</h4>
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                          {np.implementations.map((imp, idx) => (
+                            <div key={idx} className={`p-3 rounded-lg text-sm border-l-4 ${imp.status === 'Done' ? 'bg-slate-50 border-emerald-500' : 'bg-rose-50 border-rose-500'}`}>
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="text-xs font-bold text-slate-500">{imp.time}</span>
+                                <span className={`text-[10px] px-1.5 rounded font-bold ${imp.status === 'Done' ? 'text-emerald-700 bg-emerald-100' : 'text-rose-700 bg-rose-100'}`}>{imp.status}</span>
+                              </div>
+                              <p className="text-slate-700">{imp.action}</p>
+                              <p className="text-[10px] text-slate-400 text-right mt-1">RN 류수진</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-[#E6F0F9] p-4 rounded-xl border border-[#005EB8]/20">
+                        <h4 className="text-xs font-bold text-[#005EB8] uppercase mb-1">Evaluation</h4>
+                        <p className="text-sm text-slate-800">{np.evaluation}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* LITERATURE TAB */}
+          {activeTab === 'literature' && (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-xl font-bold text-slate-800">Literature Review</h3>
+              <div className="grid gap-6">
+                {literatureContent.map((lit, i) => (
+                  <div key={i} className={`${theme.card} p-6 border-l-4 border-l-[#005EB8]`}>
+                    <h4 className="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                      <BookOpen size={20} className="text-[#005EB8]"/> {lit.title}
+                    </h4>
+                    <p className="text-slate-600 text-sm leading-relaxed">{lit.content}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* RISK TAB */}
+          {activeTab === 'risk' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div onClick={() => setRiskModal('fall')} className={`${theme.card} p-6 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
+                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><ShieldAlert className="text-amber-500"/> Fall Risk</h4>
+                  <div className="text-4xl font-extrabold text-amber-500 mb-2">35 <span className="text-sm font-normal text-slate-400">/ 125</span></div>
+                  <div className="text-sm font-bold text-amber-700 bg-amber-50 inline-block px-3 py-1 rounded-full mb-4">Standard Risk</div>
+                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
+                </div>
+                <div onClick={() => setRiskModal('pressure')} className={`${theme.card} p-6 border-l-4 border-l-teal-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
+                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><Layout className="text-teal-500"/> Pressure Ulcer</h4>
+                  <div className="text-4xl font-extrabold text-teal-500 mb-2">22 <span className="text-sm font-normal text-slate-400">/ 23</span></div>
+                  <div className="text-sm font-bold text-teal-700 bg-teal-50 inline-block px-3 py-1 rounded-full mb-4">No Risk</div>
+                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
                 </div>
               </div>
             </div>
@@ -736,7 +890,7 @@ const NursingCaseStudyApp = () => {
             <div className="space-y-6 animate-fade-in">
               <div className="grid lg:grid-cols-2 gap-6">
                 <div className={`${theme.card} p-6`}>
-                  <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2"><Scale size={18} className="text-[#D291BC]"/> Intake & Output</h3>
+                  <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2"><Scale size={18} className="text-[#005EB8]"/> Intake & Output</h3>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={ioData}>
@@ -767,140 +921,28 @@ const NursingCaseStudyApp = () => {
             </div>
           )}
 
-          {/* RISK TAB */}
-          {activeTab === 'risk' && (
+          {/* EDUCATION TAB */}
+          {activeTab === 'education' && (
             <div className="space-y-6 animate-fade-in">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div onClick={() => setRiskModal('fall')} className={`${theme.card} p-6 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
-                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><ShieldAlert className="text-amber-500"/> Fall Risk</h4>
-                  <div className="text-4xl font-extrabold text-amber-500 mb-2">35 <span className="text-sm font-normal text-slate-400">/ 125</span></div>
-                  <div className="text-sm font-bold text-amber-700 bg-amber-50 inline-block px-3 py-1 rounded-full mb-4">Standard Risk</div>
-                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
-                </div>
-                <div onClick={() => setRiskModal('pressure')} className={`${theme.card} p-6 border-l-4 border-l-teal-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
-                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><Layout className="text-teal-500"/> Pressure Ulcer</h4>
-                  <div className="text-4xl font-extrabold text-teal-500 mb-2">22 <span className="text-sm font-normal text-slate-400">/ 23</span></div>
-                  <div className="text-sm font-bold text-teal-700 bg-teal-50 inline-block px-3 py-1 rounded-full mb-4">No Risk</div>
-                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">Discharge Education Plan</h3>
+              <div className="bg-white border border-slate-200 p-6 rounded-xl flex items-start gap-4 mb-6 shadow-sm">
+                <div className="bg-[#005EB8] p-3 rounded-full text-white shadow-sm"><BookOpen size={24} /></div>
+                <div>
+                  <h3 className="text-xl font-bold text-[#005EB8] mb-2">CPFE 환자 퇴원 가이드</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    본 대상자는 <strong>복합 폐섬유증 및 폐기종(CPFE)</strong>으로 인해 폐확산능(DLCO)이 33%로 저하되어 있습니다. 
+                    퇴원 후 가정에서의 철저한 호흡 관리와 감염 예방이 재입원을 막는 핵심입니다.
+                  </p>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* MEDS TAB */}
-          {activeTab === 'meds' && (
-            <div className="space-y-6 animate-fade-in">
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm overflow-x-auto">
-                <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <Clock className="text-[#D291BC]"/> Medication Timeline
-                </h3>
-                <div className="flex min-w-[600px] justify-between relative pt-4 pb-2 px-4">
-                  <div className="absolute top-7 left-4 right-4 h-0.5 bg-slate-100 -z-10"></div>
-                  {medTimeline.map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-3 w-1/5 text-center group">
-                      <div className={`w-6 h-6 rounded-full border-4 border-white shadow-sm flex items-center justify-center z-10 ${
-                        item.type === 'start' ? 'bg-blue-400' : item.type === 'alert' ? 'bg-red-400' : item.type === 'maintain' ? 'bg-slate-400' : item.type === 'change' ? 'bg-green-400' : 'bg-purple-400'
-                      }`}></div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full mb-1">{item.date}</div>
-                        <div className="text-[10px] text-slate-600 font-medium bg-white p-1 rounded border border-slate-100 shadow-sm">{item.event}</div>
-                      </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {educationContent.map((edu, i) => (
+                  <div key={i} className={`${theme.card} p-6 flex flex-col hover:-translate-y-1 transition-transform`}>
+                    <div className="mb-4 bg-slate-50 w-12 h-12 rounded-xl flex items-center justify-center text-[#005EB8]">
+                      {i === 0 ? <Wind /> : i === 1 ? <ShieldAlert /> : <Pill />}
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div className="grid gap-4">
-                {medicationList.map((med) => (
-                  <div key={med.id} onClick={() => setSelectedMed(med)} className={`${theme.card} p-5 flex justify-between items-center cursor-pointer border-l-4 border-l-[#E0BBE4]`}>
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-xl ${med.route === 'IV' ? 'bg-rose-50 text-rose-500' : med.route === 'PO' ? 'bg-amber-50 text-amber-500' : 'bg-sky-50 text-sky-500'}`}>
-                        {med.route === 'IV' ? <Syringe size={20}/> : med.route === 'PO' ? <Pill size={20}/> : <Wind size={20}/>}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-slate-700 text-lg">{med.name}</h4>
-                        <p className="text-xs text-slate-400 font-medium">{med.route} | {med.dose}</p>
-                      </div>
-                    </div>
-                    <ChevronRight size={16} className="text-slate-300"/>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* NURSING TAB */}
-          {activeTab === 'nursing' && (
-            <div className="space-y-8 animate-fade-in">
-              {nursingProcess.map((np) => (
-                <div key={np.id} className={`${theme.card} overflow-hidden border-t-4 border-t-[#E0BBE4]`}>
-                  <div className="bg-slate-50/50 p-6 border-b border-slate-100">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-bold bg-white border border-slate-200 px-2 py-0.5 rounded text-slate-500">진단#{np.id}</span>
-                      <span className="text-xs text-slate-400">{np.time}</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-800">{np.diagnosis}</h3>
-                  </div>
-                  <div className="p-6 grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <div className="bg-[#FFF0F5] p-4 rounded-xl border border-[#FFE4E1]">
-                        <h4 className="text-xs font-bold text-rose-400 uppercase mb-2">Assessment</h4>
-                        <p className="text-sm text-slate-700 mb-1"><strong className="text-rose-500">S:</strong> {np.assessment.S}</p>
-                        <p className="text-sm text-slate-700"><strong className="text-rose-500">O:</strong> {np.assessment.O}</p>
-                      </div>
-                      <div className="space-y-6">
-                          <ChartForNursingProcess data={labData} chartKey={np.chartKey}/>
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Goals & Plan</h4>
-                        <ul className="space-y-2">
-                          <li className="text-sm text-slate-700 flex gap-2"><span className="text-teal-500 font-bold">단기:</span> {np.goals.short}</li>
-                          <li className="text-sm text-slate-700 flex gap-2"><span className="text-teal-500 font-bold">장기:</span> {np.goals.long}</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1">Rationale & Priority</h4>
-                        <p className="text-xs text-slate-600 mb-2 leading-relaxed"><strong>사유:</strong> {np.rationale}</p>
-                        <p className="text-xs text-slate-600 leading-relaxed"><strong>우선순위:</strong> {np.priority}</p>
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><CheckSquare size={12}/> Implementation</h4>
-                        <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                          {np.implementations.map((imp, idx) => (
-                            <div key={idx} className={`p-3 rounded-lg text-sm border-l-4 ${imp.status === 'Done' ? 'bg-slate-50 border-emerald-400' : 'bg-red-50 border-red-400'}`}>
-                              <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs font-bold text-slate-500">{imp.time}</span>
-                                <span className={`text-[10px] px-1.5 rounded font-bold ${imp.status === 'Done' ? 'text-emerald-600 bg-emerald-100' : 'text-red-600 bg-red-100'}`}>{imp.status}</span>
-                              </div>
-                              <p className="text-slate-700">{imp.action}</p>
-                              <p className="text-[10px] text-slate-400 text-right mt-1">서명: 202221920</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="bg-slate-50 p-4 rounded-xl border-l-4 border-l-emerald-400">
-                        <h4 className="text-xs font-bold text-emerald-600 uppercase mb-1">Evaluation</h4>
-                        <p className="text-sm text-slate-700">{np.evaluation}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* LITERATURE TAB */}
-          {activeTab === 'literature' && (
-            <div className="space-y-6 animate-fade-in">
-              <h3 className="text-xl font-bold text-slate-800">Literature Review</h3>
-              <div className="grid gap-6">
-                {literatureContent.map((lit, i) => (
-                  <div key={i} className={`${theme.card} p-6 border-l-4 border-l-[#E0BBE4]`}>
-                    <h4 className="font-bold text-lg text-slate-700 mb-2 flex items-center gap-2">
-                      <BookOpen size={20} className="text-[#D291BC]"/> {lit.title}
-                    </h4>
-                    <p className="text-slate-600 text-sm leading-relaxed">{lit.content}</p>
+                    <h4 className="font-bold text-lg text-slate-800 mb-2">{edu.title}</h4>
+                    <p className="text-sm text-slate-500 mb-4 flex-1 leading-relaxed">{edu.content}</p>
                   </div>
                 ))}
               </div>
@@ -928,7 +970,7 @@ const NursingCaseStudyApp = () => {
           <button 
             key={item.id} 
             onClick={() => setActiveTab(item.id)}
-            className={`flex flex-col items-center gap-1 ${activeTab === item.id ? 'text-[#D291BC]' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 ${activeTab === item.id ? 'text-[#005EB8]' : 'text-slate-400'}`}
           >
             <item.icon size={20} />
             <span className="text-[10px] font-medium">{item.label}</span>
