@@ -5,30 +5,29 @@ import {
   CheckCircle2, AlertTriangle, Syringe, 
   ShieldAlert, Biohazard, ArrowUpRight,
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
-  Clock, CheckSquare, Plus
+  Clock, CheckSquare, Plus, Book
 } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, ComposedChart, Area, Bar
 } from 'recharts';
 
-// --- 🎀 테마 설정 (Cool Pink & Professional) ---
+// --- 🎀 테마 설정 ---
 const theme = {
-  bgMain: 'bg-[#FDFBFD]', // Cool White
+  bgMain: 'bg-[#FDFBFD]', 
   sidebar: 'bg-white border-r border-slate-100',
-  mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]',
+  mobileNav: 'bg-white/90 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden',
   header: 'bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40',
   primaryText: 'text-slate-800',
   secondaryText: 'text-slate-500',
-  accentColor: '#E0BBE4', // Cool Lavender
+  accentColor: '#E0BBE4', 
   card: 'bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300',
   buttonPrimary: 'bg-[#E0BBE4] text-white hover:bg-[#D291BC] shadow-sm transition-colors rounded-xl px-4 py-2 font-medium flex items-center gap-2',
   buttonSecondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors rounded-xl px-4 py-2 font-medium flex items-center gap-2',
 };
 
-// --- 1. 데이터 섹션 (정제됨) ---
+// --- 1. 데이터 섹션 ---
 
-[cite_start]// Vital Data [cite: 468-470] - 오타 수정 완료
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 37.5 },
   { time: '11/25 22:00', sbp: 113, dbp: 70, hr: 121, rr: 24, spo2: 93, bt: 38.8 },
@@ -41,7 +40,6 @@ const vitalData = [
   { time: '12/01 10:00', sbp: 120, dbp: 80, hr: 75, rr: 20, spo2: 95, bt: 36.4 },
 ];
 
-[cite_start]// Lab Data [cite: 135-165, 236-262]
 const labData = [
   { date: '11/25', wbc: 23.92, crp: 28.94, procal: 1.69, hb: 12.0, k: 3.1 },
   { date: '11/26', wbc: 21.48, crp: 28.45, procal: 1.50, hb: 10.9, k: 3.0 },
@@ -51,7 +49,6 @@ const labData = [
   { date: '12/01', wbc: 7.80, crp: 1.00, procal: 0.10, hb: 11.2, k: 4.0 }, 
 ];
 
-// Medication Timeline
 const medTimeline = [
   { date: '11/25', event: '항생제(Ceftriaxone) Start', type: 'start' },
   { date: '11/25', event: '면역억제제(MTX) Hold', type: 'alert' },
@@ -60,7 +57,7 @@ const medTimeline = [
   { date: '12/01', event: '퇴원약 처방 (MTX 외래 확인)', type: 'end' },
 ];
 
-[cite_start]// Medication List [cite: 428-467]
+// Full Detailed Medication List
 const medicationList = [
   { 
     id: 1, name: "Ceftriaxone", route: "IV", dose: "2g q24h", status: "STOP", 
@@ -81,10 +78,17 @@ const medicationList = [
   { 
     id: 5, name: "Ventolin (Salbutamol)", route: "Nebulizer", dose: "2.5mg PRN", status: "ACTIVE",
     details: { class: "속효성 베타2 작용제", moa: "기관지 평활근을 이완시켜 기도를 확장한다.", adultDose: "필요 시 2.5~5mg 흡입", sideEffects: "빈맥, 손떨림, 두근거림", caution: "심혈관 질환 환자 주의" }
+  },
+  { 
+    id: 6, name: "Mucomyst", route: "Nebulizer", dose: "800mg QID", status: "ACTIVE",
+    details: { class: "거담제", moa: "객담의 이황화 결합을 끊어 점도를 낮춘다.", adultDose: "1회 1~2 ample 흡입", sideEffects: "구역, 구토, 기관지 경련", caution: "천식 환자 주의" }
+  },
+  { 
+    id: 7, name: "Acetaminophen", route: "IV", dose: "1g PRN", status: "PRN",
+    details: { class: "해열진통제", moa: "중추신경계의 프로스타글란딘 합성을 억제한다.", adultDose: "1회 1g, 1일 최대 4g", sideEffects: "간독성, 발진", caution: "간부전 환자 금기" }
   }
 ];
 
-[cite_start]// Nursing Process [cite: 731-929]
 const nursingProcess = [
   {
     id: 1,
@@ -136,14 +140,14 @@ const nursingProcess = [
   }
 ];
 
-// Literature Content
 const literatureContent = [
   { title: "CPFE (Combined Pulmonary Fibrosis and Emphysema)", content: "상엽의 기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군. 특징적으로 폐용적은 정상이지만 확산능(DLCO)이 심각하게 저하됨. 예후가 불량하며 폐고혈압 합병증 빈도가 높음." },
   { title: "Pneumonia (폐렴) - ATS/IDSA 2019", content: "폐실질의 급성 염증. CPFE 등 기저질환자는 고위험군으로 분류되며, 초기 경험적 광범위 항생제(Ceftriaxone + Macrolide) 사용이 권고됨. 항생제 선택 전 혈액 및 객담 배양 검사 필수." },
   { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. 면역억제제 사용 시 감염 위험 증가." }
 ];
 
-// --- 컴포넌트: 간호과정 내 그래프 ---
+// --- Sub-Components (Modals & Charts) ---
+
 const ChartForNursingProcess = ({ data, chartKey }) => {
     let chartConfig;
     let slicedData = data.slice(0, 5); 
@@ -184,9 +188,166 @@ const ChartForNursingProcess = ({ data, chartKey }) => {
     );
 };
 
-// --- 컴포넌트: 보고서 뷰 (인쇄용) ---
+const VitalHistoryModal = ({ vital, data, onClose }) => {
+  if (!vital) return null;
+  const keyMap = { 'BP (mmHg)': 'sbp', 'HR (bpm)': 'hr', 'RR (/min)': 'rr', 'SpO2 (%)': 'spo2', 'BT (℃)': 'bt' };
+  const dataKey = keyMap[vital.label];
+
+  return (
+    <div className="fixed inset-0 bg-rose-900/20 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden border border-rose-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#FFF0F5] p-5 flex justify-between items-center border-b border-rose-100">
+          <h3 className="font-bold text-lg flex items-center gap-2 text-rose-900">
+            <Activity size={20} className="text-rose-500"/> {vital.label} History
+          </h3>
+          <button onClick={onClose}><X size={20} className="text-rose-400 hover:text-rose-600"/></button>
+        </div>
+        <div className="p-0 max-h-[60vh] overflow-y-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-white text-rose-400 font-bold sticky top-0 border-b border-rose-50">
+              <tr>
+                <th className="p-4">Time</th>
+                <th className="p-4">Value</th>
+                <th className="p-4">Note</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-rose-50">
+              {data.map((d, i) => (
+                <tr key={i} className="hover:bg-rose-50/50 transition-colors">
+                  <td className="p-4 text-slate-600 font-medium">{d.time}</td>
+                  <td className="p-4 font-bold text-rose-700 text-lg">
+                    {vital.label === 'BP (mmHg)' ? `${d.sbp}/${d.dbp}` : d[dataKey]} 
+                  </td>
+                  <td className="p-4 text-xs text-slate-400">
+                    {i === 0 ? <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Adm</span> : 
+                     i === data.length - 1 ? <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Disch</span> : '-'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MedDetailModal = ({ med, onClose }) => {
+  if (!med) return null;
+  return (
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#E0BBE4] p-6 flex justify-between items-start text-white">
+          <div>
+            <h3 className="text-2xl font-bold">{med.name}</h3>
+            <span className="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-md border border-white/30">
+              {med.route} | {med.dose}
+            </span>
+          </div>
+          <button onClick={onClose}><X size={24}/></button>
+        </div>
+        <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-slate-400">CLASS</span>
+              <p className="font-bold text-slate-700">{med.details.class}</p>
+            </div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-slate-400">DOSE</span>
+              <p className="font-bold text-slate-700">{med.details.adultDose}</p>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-[#D291BC] uppercase mb-2">약리 기전</h4>
+            <p className="text-sm text-slate-600 bg-pink-50/50 p-3 rounded-xl border border-pink-100">{med.details.moa}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-rose-400 uppercase mb-2">부작용 & 주의사항</h4>
+            <ul className="text-sm text-slate-600 list-disc pl-5 space-y-1">
+              <li>{med.details.sideEffects}</li>
+              <li>{med.details.caution}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ReportViewerModal = ({ type, onClose }) => {
+  return (
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+          <h3 className="font-bold text-lg text-slate-700 flex items-center gap-2">
+            {type === 'PFT' ? <Wind className="text-teal-500"/> : <Activity className="text-rose-500"/>}
+            {type === 'PFT' ? 'Pulmonary Function Test Result' : 'Electrocardiogram (ECG) Result'}
+          </h3>
+          <button onClick={onClose}><X className="text-slate-400 hover:text-slate-600"/></button>
+        </div>
+        <div className="flex-1 bg-slate-100 p-4 md:p-8 overflow-y-auto flex justify-center">
+          <div className="bg-white w-full max-w-2xl shadow-lg min-h-[600px] p-8 text-slate-800 text-sm border border-slate-200">
+            <div className="flex justify-between border-b-2 border-black pb-4 mb-6">
+              <div>
+                <h1 className="text-xl font-bold font-serif">KUMC Medical Report</h1>
+                <p className="text-xs text-gray-500">Department of Pulmonology</p>
+              </div>
+              <div className="text-right text-xs">
+                <p>Pt: 김정숙 (02519326)</p>
+                <p>Date: 2025-12-01</p>
+              </div>
+            </div>
+
+            {type === 'PFT' ? (
+              <div className="space-y-6">
+                <div className="text-center font-bold text-lg mb-4">PULMONARY FUNCTION TEST</div>
+                <table className="w-full text-xs text-center border-collapse border border-gray-300">
+                  <thead className="bg-gray-100 font-bold">
+                    <tr><td className="border p-2">Test</td><td className="border p-2">Ref</td><td className="border p-2">Meas</td><td className="border p-2">%Pred</td></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td className="border p-2">FVC</td><td className="border p-2">3.32</td><td className="border p-2">2.92</td><td className="border p-2">88</td></tr>
+                    <tr><td className="border p-2">FEV1</td><td className="border p-2">2.71</td><td className="border p-2">2.31</td><td className="border p-2">85</td></tr>
+                    <tr className="bg-red-50 font-bold"><td className="border p-2 text-red-600">DLCO</td><td className="border p-2">19.9</td><td className="border p-2">6.6</td><td className="border p-2 text-red-600">33</td></tr>
+                  </tbody>
+                </table>
+                <div className="border p-4 mt-4 bg-gray-50 rounded">
+                  <p className="font-bold mb-2">Interpretation:</p>
+                  <p>1. Normal Spirometry (Volumes preserved).</p>
+                  <p>2. <span className="text-red-600 font-bold">Severe diffusion defect (DLCO 33%).</span></p>
+                  <p>3. Compatible with CPFE diagnosis.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="text-center font-bold text-lg mb-4">12-Lead ECG Analysis</div>
+                <div className="grid grid-cols-4 gap-4 text-xs mb-4 border p-4">
+                  <div>Rate: <span className="text-red-600 font-bold">146</span></div>
+                  <div>PR: 170</div>
+                  <div>QRS: 82</div>
+                  <div>QT/QTc: 273/426</div>
+                </div>
+                <div className="h-32 border border-slate-200 bg-pink-50/30 flex items-center justify-center text-pink-300 italic">
+                  [Graph: Sinus Tachycardia Waveforms]
+                </div>
+                <div className="border p-4 mt-4 bg-gray-50 rounded">
+                  <p className="font-bold mb-2">Diagnosis:</p>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li className="text-red-600 font-bold">Sinus Tachycardia</li>
+                    <li>Nonspecific ST-T wave abnormality</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Component for Final Report Rendering (A4 Print Layout)
 const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, literatureContent }, ref) => {
-  // Page filling logic
   const fillPages = (data, count) => Array(count).fill(data).flat();
 
   const ReportSection = ({ title, children, pageBreak }) => (
@@ -215,7 +376,7 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
         `}
       </style>
       
-      {/* 1. 표지 (Header) */}
+      {/* 1. Header */}
       <div className="print-header">
         <div>
           <h1 className="text-2xl font-bold">임상 사례 연구 보고서</h1>
@@ -228,7 +389,7 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
         </div>
       </div>
 
-      {/* 2. 문헌고찰 (Literatrue Review) */}
+      {/* 2. Literature Review */}
       <ReportSection title="1. 문헌 고찰 (Literature Review)">
         {literatureContent.map((lit, i) => (
           <div key={i} className="mb-6">
@@ -241,8 +402,8 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
         </div>
       </ReportSection>
 
-      {/* 3. 간호 사정 요약 */}
-      <ReportSection title="2. 간호 사정 요약 (Nursing Assessment Summary)" pageBreak={true}>
+      {/* 3. Assessment */}
+      <ReportSection title="2. 간호 사정 요약 (Assessment)" pageBreak={true}>
         <h3 className="font-bold text-sm mb-2">2.1. 초기 활력징후 및 검사결과 (11/25 ER)</h3>
         <table className="w-full text-xs text-center">
           <thead>
@@ -274,12 +435,12 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
         </div>
       </ReportSection>
 
-      {/* 4. 간호 과정 기록 (Extended for Pages) */}
+      {/* 4. Nursing Process (Extended) */}
       <ReportSection title="3. 간호 과정 기록 (Nursing Process Records)" pageBreak={true}>
         {fillPages(nursingProcess, 4).map((np, idx) => (
           <div key={idx} className={`mb-8 border border-gray-400 p-4 rounded ${idx > 0 && idx % 2 === 0 ? 'page-break' : ''}`}>
             <h3 className="font-bold text-base bg-slate-100 p-2 mb-2 border-l-4 border-slate-500">
-              간호진단 #{idx % 2 + 1}: {np.diagnosis} {idx > 1 ? '(Cont.)' : ''}
+              간호진단 #{idx % 2 + 1}: {np.diagnosis}
             </h3>
             
             {idx < 2 && (
@@ -321,8 +482,8 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
         ))}
       </ReportSection>
 
-      {/* 5. 부록 (Appendix for Page Count) */}
-      <ReportSection title="4. 부록 (Appendix: Vital Signs Log)" pageBreak={true}>
+      {/* 5. Appendix */}
+      <ReportSection title="4. 부록 (Appendix)" pageBreak={true}>
          {fillPages(vitalData, 3).map((chunk, pageIdx) => (
             <div key={pageIdx} className={pageIdx > 0 ? 'page-break' : ''}>
                 <h3 className="font-bold text-sm mb-4">4.{pageIdx+1}. 일별 상세 활력징후 기록지 (Page {pageIdx+1})</h3>
@@ -336,7 +497,6 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
                         ))}
                     </tbody>
                 </table>
-                <div className="mt-8 text-xs text-gray-500 text-center">[ 본 기록지는 전자의무기록(EMR)을 바탕으로 작성되었습니다. ]</div>
             </div>
          ))}
       </ReportSection>
@@ -344,12 +504,13 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
   );
 });
 
-// --- 메인 앱 컴포넌트 ---
+// --- Main App Component ---
 const NursingCaseStudyApp = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMed, setSelectedMed] = useState(null);
   const [viewReport, setViewReport] = useState(null);
   const [filterActive, setFilterActive] = useState(false);
+  const [selectedVital, setSelectedVital] = useState(null); // Add state for vital modal
   const reportRef = useRef();
 
   const handlePrint = () => {
@@ -359,7 +520,7 @@ const NursingCaseStudyApp = () => {
 
   return (
     <div className={`min-h-screen ${theme.bgMain} font-sans text-slate-800 flex flex-col md:flex-row pb-16 md:pb-0`}>
-      {/* Sidebar (Desktop) */}
+      {/* Sidebar */}
       <aside className={`w-64 ${theme.sidebar} flex-col fixed h-full z-30 hidden md:flex print:hidden`}>
         <div className="p-6 border-b border-slate-100 flex items-center gap-3">
           <div className="bg-[#E0BBE4] p-2 rounded-lg text-white"><Database size={20}/></div>
@@ -400,7 +561,7 @@ const NursingCaseStudyApp = () => {
           </div>
           <div className="flex gap-2">
             <button onClick={handlePrint} className={`${theme.buttonPrimary} flex items-center gap-2 text-xs`}>
-              <Printer size={14}/> Report Print
+              <Printer size={14}/> Print Report
             </button>
           </div>
         </header>
@@ -418,7 +579,7 @@ const NursingCaseStudyApp = () => {
                   { label: 'SpO2 (%)', val: '95', icon: Droplet, color: 'text-sky-500' },
                   { label: 'BT (℃)', val: '36.4', icon: Thermometer, color: 'text-amber-500' },
                 ].map((v, i) => (
-                  <div key={i} className={`${theme.card} p-4 md:p-5 group`}>
+                  <div key={i} onClick={() => setSelectedVital(v)} className={`${theme.card} p-4 md:p-5 group cursor-pointer hover:border-[#E0BBE4]`}>
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase">{v.label}</span>
                       <v.icon size={16} className={`${v.color} opacity-70`}/>
@@ -630,6 +791,7 @@ const NursingCaseStudyApp = () => {
       {/* Modals */}
       {selectedMed && <MedDetailModal med={selectedMed} onClose={() => setSelectedMed(null)} />}
       {viewReport && <ReportViewerModal type={viewReport} onClose={() => setViewReport(null)} />}
+      {selectedVital && <VitalHistoryModal vital={selectedVital} data={vitalData} onClose={() => setSelectedVital(null)} />}
     </div>
   );
 };
