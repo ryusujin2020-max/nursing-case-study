@@ -23,7 +23,7 @@ const theme = {
   accentColor: 'rose', 
   card: 'bg-white rounded-2xl shadow-sm border border-rose-50 hover:shadow-md hover:border-rose-200 transition-all duration-300',
   buttonPrimary: 'bg-rose-400 text-white hover:bg-rose-500 shadow-sm transition-colors rounded-xl',
-  buttonSecondary: 'bg-[#FFFAF0] text-rose-700 border border-rose-100 hover:bg-white transition-colors rounded-xl', // Ivory tone button
+  buttonSecondary: 'bg-[#FFFAF0] text-rose-700 border border-rose-100 hover:bg-white transition-colors rounded-xl', 
   badge: 'px-2.5 py-0.5 rounded-full text-xs font-bold'
 };
 
@@ -40,6 +40,7 @@ const vitalData = [
   { time: '12/01 10:00', sbp: 120, dbp: 80, hr: 75, rr: 20, spo2: 95, bt: 36.4 },
 ];
 
+// Source: Lab Data
 const labData = [
   { date: '11/25', wbc: 23.92, crp: 28.94, procal: 1.69 },
   { date: '11/26', wbc: 21.48, crp: 28.45, procal: 1.50 },
