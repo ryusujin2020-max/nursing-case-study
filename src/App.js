@@ -7,20 +7,21 @@ import {
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
   Clock, CheckSquare, Plus, Book, Layout
 } from 'lucide-react';
+// [FIX] BarChart 추가 완료
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, ComposedChart, Area, Bar
+  ResponsiveContainer, ComposedChart, Area, Bar, BarChart
 } from 'recharts';
 
 // --- 🏥 테마 설정 (SMC Deep Blue Style) ---
 const theme = {
-  bgMain: 'bg-[#F0F4F8]', // Very Light Blue Gray Background
+  bgMain: 'bg-[#F0F4F8]', 
   sidebar: 'bg-white border-r border-slate-200 z-50 shadow-sm',
   mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]',
   header: 'bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40',
   primaryText: 'text-slate-900',
   secondaryText: 'text-slate-500',
-  accentColor: '#005EB8', // SMC Blue (Deep Medical Blue)
+  accentColor: '#005EB8', // SMC Blue
   card: 'bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300',
   buttonPrimary: 'bg-[#005EB8] text-white hover:bg-[#004C99] shadow-sm transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
   buttonSecondary: 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
@@ -131,7 +132,7 @@ const nursingProcess = [
     id: 1,
     diagnosis: "폐포-모세혈관 막 변화와 관련된 가스교환 장애",
     time: "2025-11-25 19:30",
-    rationale: "ER 내원 시 SpO2 87%(RA), ABGA pO2 68mmHg 확인됨. CT상 광범위한 섬유화 소견이 확산능 저하를 시사하며, 이는 호흡기 문제 중 최우선 순위이다.",
+    rationale: "ER 내원 시 SpO2 87%(RA), ABGA pO2 68mmHg 확인됨. [cite_start]CT상 광범위한 섬유화 소견이 확산능 저하를 시사함 [cite: 241-250, 694].",
     priority: "생리적 욕구(산소화) 결핍 문제이므로 최우선 순위로 설정함.",
     assessment: { S: "“숨이 차서 말하기도 힘들고 눕기가 힘들어요.”", O: "SpO2 87%(RA), RR 33회/분, DLCO 33%" },
     goals: { short: "대상자는 24시간 내 산소 공급 하에 SpO2 92% 이상을 유지할 것이다.", long: "대상자는 퇴원 시까지 호흡곤란 없이 일상생활(ADL)을 수행할 것이다. (정상범위 SpO2: 95% 이상)" },
@@ -899,7 +900,7 @@ const NursingCaseStudyApp = () => {
                         <YAxis fontSize={10}/>
                         <Tooltip/>
                         <Legend wrapperStyle={{fontSize: '11px'}}/>
-                        <Bar dataKey="intake" fill="#60a5fa" name="Intake"/>
+                        <Bar dataKey="intake" fill="#005EB8" name="Intake"/>
                         <Bar dataKey="output" fill="#f87171" name="Output"/>
                       </BarChart>
                     </ResponsiveContainer>
