@@ -7,7 +7,6 @@ import {
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
   Clock, CheckSquare, Plus, Book, Layout
 } from 'lucide-react';
-// [FIX] BarChart 추가 완료
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, ComposedChart, Area, Bar, BarChart
@@ -132,7 +131,7 @@ const nursingProcess = [
     id: 1,
     diagnosis: "폐포-모세혈관 막 변화와 관련된 가스교환 장애",
     time: "2025-11-25 19:30",
-    rationale: "ER 내원 시 SpO2 87%(RA), ABGA pO2 68mmHg 확인됨. [cite_start]CT상 광범위한 섬유화 소견이 확산능 저하를 시사함 [cite: 241-250, 694].",
+    rationale: "ER 내원 시 SpO2 87%(RA), ABGA pO2 68mmHg 확인됨. CT상 광범위한 섬유화 소견이 확산능 저하를 시사하며, 이는 호흡기 문제 중 최우선 순위이다.",
     priority: "생리적 욕구(산소화) 결핍 문제이므로 최우선 순위로 설정함.",
     assessment: { S: "“숨이 차서 말하기도 힘들고 눕기가 힘들어요.”", O: "SpO2 87%(RA), RR 33회/분, DLCO 33%" },
     goals: { short: "대상자는 24시간 내 산소 공급 하에 SpO2 92% 이상을 유지할 것이다.", long: "대상자는 퇴원 시까지 호흡곤란 없이 일상생활(ADL)을 수행할 것이다. (정상범위 SpO2: 95% 이상)" },
@@ -179,9 +178,9 @@ const nursingProcess = [
 ];
 
 const literatureContent = [
-  { title: "CPFE (Combined Pulmonary Fibrosis and Emphysema)", content: "상엽의 기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군. 특징적으로 폐용적은 정상이지만 확산능(DLCO)이 심각하게 저하됨. [cite_start]예후가 불량하며 폐고혈압 합병증 빈도가 높음 [cite: 576-577, 602-608]." },
-  { title: "Pneumonia (폐렴) - ATS/IDSA 2019", content: "폐실질의 급성 염증. CPFE 등 기저질환자는 고위험군으로 분류되며, 초기 경험적 광범위 항생제(Ceftriaxone + Macrolide) 사용이 권고됨. [cite_start]항생제 선택 전 혈액 및 객담 배양 검사 필수 [cite: 599-601, 741-743]." },
-  { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. [cite_start]면역억제제 사용 시 감염 위험 증가 [cite: 578-579, 612-615]." }
+  { title: "CPFE (Combined Pulmonary Fibrosis and Emphysema)", content: "상엽의 기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군. 특징적으로 폐용적은 정상이지만 확산능(DLCO)이 심각하게 저하됨. 예후가 불량하며 폐고혈압 합병증 빈도가 높음." },
+  { title: "Pneumonia (폐렴) - ATS/IDSA 2019", content: "폐실질의 급성 염증. CPFE 등 기저질환자는 고위험군으로 분류되며, 초기 경험적 광범위 항생제(Ceftriaxone + Macrolide) 사용이 권고됨. 항생제 선택 전 혈액 및 객담 배양 검사 필수." },
+  { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. 면역억제제 사용 시 감염 위험 증가." }
 ];
 
 const educationContent = [
@@ -652,7 +651,7 @@ const NursingCaseStudyApp = () => {
           ].map(item => (
             <button key={item.id} onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                activeTab === item.id ? 'bg-[#E6F0F9] text-[#005EB8] border border-[#005EB8]/20' : 'text-slate-500 hover:bg-slate-50'
+                activeTab === item.id ? 'bg-teal-50 text-teal-700 border border-teal-100' : 'text-slate-500 hover:bg-slate-50'
               }`}
             >
               <item.icon size={18}/> {item.label}
