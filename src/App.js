@@ -5,28 +5,30 @@ import {
   CheckCircle2, AlertTriangle, Syringe, 
   ShieldAlert, Biohazard, ArrowUpRight,
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
-  Clock, CheckSquare, Plus, Book
+  Clock, CheckSquare, Plus, Layout, Book, Download
 } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, ComposedChart, Area, Bar
+  ResponsiveContainer, ComposedChart, Area, Bar, BarChart
 } from 'recharts';
 
-// --- 🎀 테마 설정 ---
+// --- 🎀 테마 설정 (Cool Pink & Professional High-Fidelity) ---
 const theme = {
-  bgMain: 'bg-[#FDFBFD]', 
-  sidebar: 'bg-white border-r border-slate-100',
-  mobileNav: 'bg-white/90 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden',
-  header: 'bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40',
+  bgMain: 'bg-[#FDFBFD]', // Cool White Background
+  sidebar: 'bg-white border-r border-slate-200 z-50',
+  mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]',
+  header: 'bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40',
   primaryText: 'text-slate-800',
   secondaryText: 'text-slate-500',
-  accentColor: '#E0BBE4', 
+  accentColor: '#E0BBE4', // Cool Lavender
+  highlight: '#F4E1F0', // Soft Pink Highlight
   card: 'bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300',
-  buttonPrimary: 'bg-[#E0BBE4] text-white hover:bg-[#D291BC] shadow-sm transition-colors rounded-xl px-4 py-2 font-medium flex items-center gap-2',
-  buttonSecondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors rounded-xl px-4 py-2 font-medium flex items-center gap-2',
+  buttonPrimary: 'bg-[#E0BBE4] text-white hover:bg-[#D291BC] shadow-sm transition-colors rounded-xl px-4 py-2 font-bold text-sm flex items-center gap-2',
+  buttonSecondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors rounded-xl px-4 py-2 font-bold text-sm flex items-center gap-2',
+  badge: 'px-2.5 py-0.5 rounded-full text-xs font-bold'
 };
 
-// --- 1. 데이터 섹션 ---
+// --- 1. 데이터 섹션 (Full Detail) ---
 
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 37.5 },
@@ -49,6 +51,12 @@ const labData = [
   { date: '12/01', wbc: 7.80, crp: 1.00, procal: 0.10, hb: 11.2, k: 4.0 }, 
 ];
 
+const ioData = [
+  { date: '11/25', intake: 2170, output: 1700, balance: 470 },
+  { date: '11/26', intake: 2180, output: 2675, balance: -495 },
+  { date: '11/29', intake: 1645, output: 2950, balance: -1305 }, 
+];
+
 const medTimeline = [
   { date: '11/25', event: '항생제(Ceftriaxone) Start', type: 'start' },
   { date: '11/25', event: '면역억제제(MTX) Hold', type: 'alert' },
@@ -57,35 +65,66 @@ const medTimeline = [
   { date: '12/01', event: '퇴원약 처방 (MTX 외래 확인)', type: 'end' },
 ];
 
-// Full Detailed Medication List
 const medicationList = [
   { 
     id: 1, name: "Ceftriaxone", route: "IV", dose: "2g q24h", status: "STOP", 
-    details: { class: "3세대 세팔로스포린", moa: "세균의 세포벽 합성을 억제하여 살균 작용을 한다.", adultDose: "1일 1회 1~2g 정맥 주사", sideEffects: "설사, 발진, 간수치 상승", caution: "페니실린 과민반응 병력, 신부전 환자 금기." }
+    details: { 
+      class: "3세대 세팔로스포린계 항생제", 
+      moa: "세균의 세포벽 합성을 억제하여 살균 작용을 한다. 그람 음성균에 특히 효과적이다.", 
+      adultDose: "1일 1회 1~2g 정맥 또는 근육 주사 (중증 감염 시 최대 4g)", 
+      sideEffects: "설사, 발진, 간수치(AST/ALT) 상승, 호산구 증가, 주사부위 통증", 
+      caution: "페니실린 과민반응 병력자 주의, 신부전 환자 금기." 
+    }
   },
   { 
     id: 2, name: "Azithromycin", route: "IV", dose: "500mg q24h", status: "STOP",
-    details: { class: "마크로라이드계", moa: "리보솜 50S 서브유닛에 결합하여 단백질 합성을 억제한다.", adultDose: "500mg 1일 1회 점적 정맥 주사", sideEffects: "오심, 구토, 혈관통, QT 연장", caution: "간기능 장애 환자 주의" }
+    details: { 
+      class: "마크로라이드계 항생제", 
+      moa: "세균 리보솜 50S 서브유닛에 결합하여 단백질 합성을 억제한다. 비정형 균(Mycoplasma 등)에 효과적.", 
+      adultDose: "500mg을 1일 1회, 최소 1시간 이상 천천히 점적 정맥 주사", 
+      sideEffects: "오심, 구토, 복통, 설사, 주사부위 혈관통, QT 간격 연장", 
+      caution: "간기능 장애 환자 주의, QT 연장 증후군 환자 금기" 
+    }
   },
   { 
     id: 3, name: "Levofloxacin", route: "PO", dose: "750mg q24h", status: "ACTIVE",
-    details: { class: "플루오로퀴놀론계", moa: "DNA Gyrase를 억제하여 세균 DNA 복제를 저해한다.", adultDose: "250-750mg 1일 1회", sideEffects: "건염, 광과민성, 불면", caution: "간질 병력 환자, 소아 금기" }
+    details: { 
+      class: "플루오로퀴놀론계 항생제", 
+      moa: "DNA Gyrase와 Topoisomerase IV를 억제하여 세균 DNA 복제를 저해한다.", 
+      adultDose: "250-750mg 1일 1회 식사와 관계없이 투여", 
+      sideEffects: "건염 및 건파열(아킬레스건 등), 광과민성 반응, 불면, 두통", 
+      caution: "간질 병력 환자 금기, 소아 및 성장기 청소년 금기, NSAIDs와 병용 시 경련 위험" 
+    }
   },
   { 
     id: 4, name: "Methotrexate (MTX)", route: "PO", dose: "2.5mg 5T Wk", status: "HOLD",
-    details: { class: "면역억제제 / DMARDs", moa: "DNA 합성을 방해하고 면역 세포 증식을 억제한다.", adultDose: "주 1회 7.5~20mg 경구 투여", sideEffects: "골수 억제, 간독성, 구내염", caution: "심각한 감염(폐렴 등) 발생 시 투여 중단(Hold). 임산부 금기." }
+    details: { 
+      class: "엽산 길항제 / 면역억제제", 
+      moa: "Dihydrofolate reductase를 억제하여 DNA 합성을 방해하고 면역 세포 증식을 억제한다.", 
+      adultDose: "류마티스 관절염: 주 1회 7.5~20mg 경구 투여", 
+      sideEffects: "골수 억제(백혈구 감소), 간독성, 구내염, 오심, 폐독성(간질성 폐렴)", 
+      caution: "심각한 감염(폐렴 등) 발생 시 투여 중단(Hold) 원칙. 임산부 절대 금기." 
+    }
   },
   { 
     id: 5, name: "Ventolin (Salbutamol)", route: "Nebulizer", dose: "2.5mg PRN", status: "ACTIVE",
-    details: { class: "속효성 베타2 작용제", moa: "기관지 평활근을 이완시켜 기도를 확장한다.", adultDose: "필요 시 2.5~5mg 흡입", sideEffects: "빈맥, 손떨림, 두근거림", caution: "심혈관 질환 환자 주의" }
+    details: { 
+      class: "속효성 베타2 작용제 (SABA)", 
+      moa: "기관지 평활근의 베타2 수용체를 선택적으로 자극하여 기도를 신속히 확장시킨다.", 
+      adultDose: "필요 시 2.5~5mg을 네블라이저로 흡입 (간격 4~6시간)", 
+      sideEffects: "빈맥, 손떨림(Tremor), 두근거림, 불안, 저칼륨혈증", 
+      caution: "갑상선 기능 항진증, 심혈관 질환, 고혈압 환자 주의" 
+    }
   },
-  { 
-    id: 6, name: "Mucomyst", route: "Nebulizer", dose: "800mg QID", status: "ACTIVE",
-    details: { class: "거담제", moa: "객담의 이황화 결합을 끊어 점도를 낮춘다.", adultDose: "1회 1~2 ample 흡입", sideEffects: "구역, 구토, 기관지 경련", caution: "천식 환자 주의" }
-  },
-  { 
-    id: 7, name: "Acetaminophen", route: "IV", dose: "1g PRN", status: "PRN",
-    details: { class: "해열진통제", moa: "중추신경계의 프로스타글란딘 합성을 억제한다.", adultDose: "1회 1g, 1일 최대 4g", sideEffects: "간독성, 발진", caution: "간부전 환자 금기" }
+  {
+    id: 6, name: "Mucomyst (Acetylcysteine)", route: "Nebulizer", dose: "800mg QID", status: "ACTIVE",
+    details: {
+      class: "점액 용해제 / 거담제",
+      moa: "객담 내 점액 단백질의 이황화 결합(-S-S-)을 끊어 점도를 낮추고 배출을 용이하게 한다.",
+      adultDose: "1회 1~2 ample (800mg) 흡입, 1일 3~4회",
+      sideEffects: "구역, 구토, 기관지 경련(드물게), 콧물 과다",
+      caution: "천식 환자에서 기관지 경련 유발 가능성 주의"
+    }
   }
 ];
 
@@ -146,7 +185,223 @@ const literatureContent = [
   { title: "Sjogren Syndrome (쇼그렌 증후군)", content: "자가면역질환으로 외분비샘 파괴가 특징. 호흡기계 침범 시 기도 건조, 간질성 폐질환(ILD) 등을 유발할 수 있음. 면역억제제 사용 시 감염 위험 증가." }
 ];
 
-// --- Sub-Components (Modals & Charts) ---
+// --- Sub-Components ---
+
+const VitalHistoryModal = ({ vital, data, onClose }) => {
+  if (!vital) return null;
+  const keyMap = { 'BP (mmHg)': 'sbp', 'HR (bpm)': 'hr', 'RR (/min)': 'rr', 'SpO2 (%)': 'spo2', 'BT (℃)': 'bt' };
+  const dataKey = keyMap[vital.label];
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/40 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#E0BBE4] p-5 flex justify-between items-center text-white">
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            <Activity size={20} /> {vital.label} History
+          </h3>
+          <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
+        </div>
+        <div className="p-0 max-h-[60vh] overflow-y-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-slate-50 text-slate-500 font-bold sticky top-0 border-b border-slate-100">
+              <tr>
+                <th className="p-4">Time</th>
+                <th className="p-4">Value</th>
+                <th className="p-4">Note</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {data.map((d, i) => (
+                <tr key={i} className="hover:bg-pink-50 transition-colors">
+                  <td className="p-4 text-slate-600 font-medium">{d.time}</td>
+                  <td className="p-4 font-bold text-[#D291BC] text-lg">
+                    {vital.label === 'BP (mmHg)' ? `${d.sbp}/${d.dbp}` : d[dataKey]} 
+                  </td>
+                  <td className="p-4 text-xs text-slate-400">
+                    {i === 0 ? <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Adm</span> : 
+                     i === data.length - 1 ? <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full">Disch</span> : '-'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RiskHistoryModal = ({ type, onClose }) => {
+  return (
+    <div className="fixed inset-0 bg-slate-900/40 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#E0BBE4] p-5 flex justify-between items-center text-white">
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            <ShieldAlert size={20}/> {type === 'fall' ? '낙상 위험 평가 상세' : '욕창 위험 평가 상세'}
+          </h3>
+          <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
+        </div>
+        <div className="p-6">
+          {type === 'fall' ? (
+            <div className="space-y-4">
+              <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                <span className="text-slate-500">총점 (Morse Fall Scale)</span>
+                <span className="text-3xl font-bold text-amber-500">35점 <span className="text-sm font-normal text-slate-400">/ 125</span></span>
+              </div>
+              <ul className="space-y-3 text-sm text-slate-600">
+                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>낙상 경험</span><span className="font-bold">없음 (0)</span></li>
+                <li className="flex justify-between p-2 bg-amber-50 rounded-lg border border-amber-100"><span>이차 진단</span><span className="font-bold text-amber-600">있음 (15)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>보행 보조</span><span className="font-bold">침상 안정 (0)</span></li>
+                <li className="flex justify-between p-2 bg-amber-50 rounded-lg border border-amber-100"><span>정맥 수액</span><span className="font-bold text-amber-600">있음 (20)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>걸음걸이</span><span className="font-bold">정상 (0)</span></li>
+                <li className="flex justify-between p-2 bg-slate-50 rounded-lg"><span>의식 상태</span><span className="font-bold">명료 (0)</span></li>
+              </ul>
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                <strong>💡 중재:</strong> 낙상 위험 표지판 부착, 침상 난간 올림 확인, 보호자 상주 교육 시행함.
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                <span className="text-slate-500">총점 (Braden Scale)</span>
+                <span className="text-3xl font-bold text-teal-500">22점 <span className="text-sm font-normal text-slate-400">/ 23</span></span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">감각인지</span><span className="font-bold">4 (장애없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">습기</span><span className="font-bold">4 (거의없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">활동성</span><span className="font-bold">4 (자주걸음)</span></div>
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">기동성</span><span className="font-bold">4 (제한없음)</span></div>
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">영양상태</span><span className="font-bold">3 (적당함)</span></div>
+                <div className="p-2 bg-slate-50 rounded-lg"><span className="block text-xs text-slate-400">마찰/쏠림</span><span className="font-bold">3 (문제없음)</span></div>
+              </div>
+              <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800">
+                <strong>💡 평가:</strong> 욕창 발생 위험 없음 (No Risk). 피부 상태 Clear 함 유지 중.
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MedDetailModal = ({ med, onClose }) => {
+  if (!med) return null;
+  return (
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#E0BBE4] p-6 flex justify-between items-start text-white">
+          <div>
+            <h3 className="text-2xl font-bold">{med.name}</h3>
+            <span className="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-md border border-white/30">
+              {med.route} | {med.dose}
+            </span>
+          </div>
+          <button onClick={onClose}><X size={24} className="hover:rotate-90 transition-transform"/></button>
+        </div>
+        <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-slate-400">CLASS</span>
+              <p className="font-bold text-slate-700">{med.details.class}</p>
+            </div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-slate-400">DOSE</span>
+              <p className="font-bold text-slate-700">{med.details.adultDose}</p>
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <h4 className="text-sm font-bold text-[#D291BC] uppercase mb-2">약리 기전</h4>
+            <p className="text-sm text-slate-600 leading-relaxed">{med.details.moa}</p>
+          </div>
+          <div className="space-y-2">
+            <h4 className="text-sm font-bold text-rose-400 uppercase">부작용 & 주의사항</h4>
+            <div className="bg-rose-50 p-3 rounded-xl border border-rose-100 text-sm text-slate-600">
+                <p className="mb-2"><strong>부작용:</strong> {med.details.sideEffects}</p>
+                <p><strong>주의:</strong> {med.details.caution}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ReportViewerModal = ({ type, onClose }) => {
+  return (
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+          <h3 className="font-bold text-lg text-slate-700 flex items-center gap-2">
+            {type === 'PFT' ? <Wind className="text-teal-500"/> : <Activity className="text-rose-500"/>}
+            {type === 'PFT' ? 'Pulmonary Function Test (PFT)' : 'Electrocardiogram (ECG)'}
+          </h3>
+          <button onClick={onClose}><X className="text-slate-400 hover:text-slate-600"/></button>
+        </div>
+        <div className="flex-1 bg-slate-100 p-4 md:p-8 overflow-y-auto flex justify-center">
+          <div className="bg-white w-full max-w-2xl shadow-lg min-h-[600px] p-8 text-slate-800 text-sm border border-slate-200 font-serif">
+            {/* Report Header */}
+            <div className="flex justify-between border-b-2 border-black pb-4 mb-6">
+              <div>
+                <h1 className="text-xl font-bold font-serif">KUMC Medical Report</h1>
+                <p className="text-xs text-gray-500">Department of Pulmonology</p>
+              </div>
+              <div className="text-right text-xs">
+                <p>Pt: 김정숙 (02519326)</p>
+                <p>Date: 2025-12-01</p>
+              </div>
+            </div>
+
+            {type === 'PFT' ? (
+              <div className="space-y-6">
+                <div className="text-center font-bold text-lg mb-4">PULMONARY FUNCTION TEST</div>
+                <table className="w-full text-xs text-center border-collapse border border-gray-300">
+                  <thead className="bg-gray-100 font-bold">
+                    <tr><td className="border p-2">Test</td><td className="border p-2">Ref</td><td className="border p-2">Meas</td><td className="border p-2">%Pred</td></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td className="border p-2">FVC</td><td className="border p-2">3.32</td><td className="border p-2">2.92</td><td className="border p-2">88</td></tr>
+                    <tr><td className="border p-2">FEV1</td><td className="border p-2">2.71</td><td className="border p-2">2.31</td><td className="border p-2">85</td></tr>
+                    <tr><td className="border p-2">FEV1/FVC</td><td className="border p-2">81</td><td className="border p-2">79</td><td className="border p-2">-</td></tr>
+                    <tr className="bg-red-50 font-bold"><td className="border p-2 text-red-600">DLCO</td><td className="border p-2">19.9</td><td className="border p-2">6.6</td><td className="border p-2 text-red-600">33</td></tr>
+                  </tbody>
+                </table>
+                <div className="border p-4 mt-4 bg-gray-50 rounded">
+                  <p className="font-bold mb-2">Interpretation:</p>
+                  <p>1. Normal Ventilatory Defect (FVC, FEV1 within normal range).</p>
+                  <p>2. <span className="text-red-600 font-bold">Severe diffusion capacity defect (DLCO 33%).</span></p>
+                  <p>3. Compatible with Combined Pulmonary Fibrosis and Emphysema.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="text-center font-bold text-lg mb-4">12-Lead Electrocardiogram</div>
+                <div className="grid grid-cols-4 gap-4 text-xs mb-4 border p-4">
+                  <div>Rate: <span className="text-red-600 font-bold">146</span></div>
+                  <div>PR: 170</div>
+                  <div>QRS: 82</div>
+                  <div>QT/QTc: 273/426</div>
+                  <div>Axis: 79</div>
+                </div>
+                <div className="h-32 border border-slate-200 bg-pink-50/30 flex items-center justify-center text-pink-300 italic">
+                  [Graph: Sinus Tachycardia Waveforms]
+                </div>
+                <div className="border p-4 mt-4 bg-gray-50 rounded">
+                  <p className="font-bold mb-2">Automatic Analysis:</p>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li className="text-red-600 font-bold">Sinus Tachycardia</li>
+                    <li>Nonspecific ST-T wave abnormality</li>
+                    <li>Abnormal ECG</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ChartForNursingProcess = ({ data, chartKey }) => {
     let chartConfig;
@@ -186,164 +441,6 @@ const ChartForNursingProcess = ({ data, chartKey }) => {
             </div>
         </div>
     );
-};
-
-const VitalHistoryModal = ({ vital, data, onClose }) => {
-  if (!vital) return null;
-  const keyMap = { 'BP (mmHg)': 'sbp', 'HR (bpm)': 'hr', 'RR (/min)': 'rr', 'SpO2 (%)': 'spo2', 'BT (℃)': 'bt' };
-  const dataKey = keyMap[vital.label];
-
-  return (
-    <div className="fixed inset-0 bg-rose-900/20 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden border border-rose-100 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#FFF0F5] p-5 flex justify-between items-center border-b border-rose-100">
-          <h3 className="font-bold text-lg flex items-center gap-2 text-rose-900">
-            <Activity size={20} className="text-rose-500"/> {vital.label} History
-          </h3>
-          <button onClick={onClose}><X size={20} className="text-rose-400 hover:text-rose-600"/></button>
-        </div>
-        <div className="p-0 max-h-[60vh] overflow-y-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-white text-rose-400 font-bold sticky top-0 border-b border-rose-50">
-              <tr>
-                <th className="p-4">Time</th>
-                <th className="p-4">Value</th>
-                <th className="p-4">Note</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-rose-50">
-              {data.map((d, i) => (
-                <tr key={i} className="hover:bg-rose-50/50 transition-colors">
-                  <td className="p-4 text-slate-600 font-medium">{d.time}</td>
-                  <td className="p-4 font-bold text-rose-700 text-lg">
-                    {vital.label === 'BP (mmHg)' ? `${d.sbp}/${d.dbp}` : d[dataKey]} 
-                  </td>
-                  <td className="p-4 text-xs text-slate-400">
-                    {i === 0 ? <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Adm</span> : 
-                     i === data.length - 1 ? <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Disch</span> : '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const MedDetailModal = ({ med, onClose }) => {
-  if (!med) return null;
-  return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#E0BBE4] p-6 flex justify-between items-start text-white">
-          <div>
-            <h3 className="text-2xl font-bold">{med.name}</h3>
-            <span className="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-md border border-white/30">
-              {med.route} | {med.dose}
-            </span>
-          </div>
-          <button onClick={onClose}><X size={24}/></button>
-        </div>
-        <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-              <span className="text-xs font-bold text-slate-400">CLASS</span>
-              <p className="font-bold text-slate-700">{med.details.class}</p>
-            </div>
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-              <span className="text-xs font-bold text-slate-400">DOSE</span>
-              <p className="font-bold text-slate-700">{med.details.adultDose}</p>
-            </div>
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-[#D291BC] uppercase mb-2">약리 기전</h4>
-            <p className="text-sm text-slate-600 bg-pink-50/50 p-3 rounded-xl border border-pink-100">{med.details.moa}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-rose-400 uppercase mb-2">부작용 & 주의사항</h4>
-            <ul className="text-sm text-slate-600 list-disc pl-5 space-y-1">
-              <li>{med.details.sideEffects}</li>
-              <li>{med.details.caution}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ReportViewerModal = ({ type, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-          <h3 className="font-bold text-lg text-slate-700 flex items-center gap-2">
-            {type === 'PFT' ? <Wind className="text-teal-500"/> : <Activity className="text-rose-500"/>}
-            {type === 'PFT' ? 'Pulmonary Function Test Result' : 'Electrocardiogram (ECG) Result'}
-          </h3>
-          <button onClick={onClose}><X className="text-slate-400 hover:text-slate-600"/></button>
-        </div>
-        <div className="flex-1 bg-slate-100 p-4 md:p-8 overflow-y-auto flex justify-center">
-          <div className="bg-white w-full max-w-2xl shadow-lg min-h-[600px] p-8 text-slate-800 text-sm border border-slate-200">
-            <div className="flex justify-between border-b-2 border-black pb-4 mb-6">
-              <div>
-                <h1 className="text-xl font-bold font-serif">KUMC Medical Report</h1>
-                <p className="text-xs text-gray-500">Department of Pulmonology</p>
-              </div>
-              <div className="text-right text-xs">
-                <p>Pt: 김정숙 (02519326)</p>
-                <p>Date: 2025-12-01</p>
-              </div>
-            </div>
-
-            {type === 'PFT' ? (
-              <div className="space-y-6">
-                <div className="text-center font-bold text-lg mb-4">PULMONARY FUNCTION TEST</div>
-                <table className="w-full text-xs text-center border-collapse border border-gray-300">
-                  <thead className="bg-gray-100 font-bold">
-                    <tr><td className="border p-2">Test</td><td className="border p-2">Ref</td><td className="border p-2">Meas</td><td className="border p-2">%Pred</td></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td className="border p-2">FVC</td><td className="border p-2">3.32</td><td className="border p-2">2.92</td><td className="border p-2">88</td></tr>
-                    <tr><td className="border p-2">FEV1</td><td className="border p-2">2.71</td><td className="border p-2">2.31</td><td className="border p-2">85</td></tr>
-                    <tr className="bg-red-50 font-bold"><td className="border p-2 text-red-600">DLCO</td><td className="border p-2">19.9</td><td className="border p-2">6.6</td><td className="border p-2 text-red-600">33</td></tr>
-                  </tbody>
-                </table>
-                <div className="border p-4 mt-4 bg-gray-50 rounded">
-                  <p className="font-bold mb-2">Interpretation:</p>
-                  <p>1. Normal Spirometry (Volumes preserved).</p>
-                  <p>2. <span className="text-red-600 font-bold">Severe diffusion defect (DLCO 33%).</span></p>
-                  <p>3. Compatible with CPFE diagnosis.</p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="text-center font-bold text-lg mb-4">12-Lead ECG Analysis</div>
-                <div className="grid grid-cols-4 gap-4 text-xs mb-4 border p-4">
-                  <div>Rate: <span className="text-red-600 font-bold">146</span></div>
-                  <div>PR: 170</div>
-                  <div>QRS: 82</div>
-                  <div>QT/QTc: 273/426</div>
-                </div>
-                <div className="h-32 border border-slate-200 bg-pink-50/30 flex items-center justify-center text-pink-300 italic">
-                  [Graph: Sinus Tachycardia Waveforms]
-                </div>
-                <div className="border p-4 mt-4 bg-gray-50 rounded">
-                  <p className="font-bold mb-2">Diagnosis:</p>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li className="text-red-600 font-bold">Sinus Tachycardia</li>
-                    <li>Nonspecific ST-T wave abnormality</li>
-                  </ul>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 // Component for Final Report Rendering (A4 Print Layout)
@@ -504,13 +601,14 @@ const FinalReportView = React.forwardRef(({ vitalData, labData, nursingProcess, 
   );
 });
 
-// --- Main App Component ---
+// --- 메인 앱 컴포넌트 ---
 const NursingCaseStudyApp = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMed, setSelectedMed] = useState(null);
   const [viewReport, setViewReport] = useState(null);
   const [filterActive, setFilterActive] = useState(false);
-  const [selectedVital, setSelectedVital] = useState(null); // Add state for vital modal
+  const [selectedVital, setSelectedVital] = useState(null);
+  const [riskModal, setRiskModal] = useState(null);
   const reportRef = useRef();
 
   const handlePrint = () => {
@@ -520,7 +618,7 @@ const NursingCaseStudyApp = () => {
 
   return (
     <div className={`min-h-screen ${theme.bgMain} font-sans text-slate-800 flex flex-col md:flex-row pb-16 md:pb-0`}>
-      {/* Sidebar */}
+      {/* Sidebar (Desktop) */}
       <aside className={`w-64 ${theme.sidebar} flex-col fixed h-full z-30 hidden md:flex print:hidden`}>
         <div className="p-6 border-b border-slate-100 flex items-center gap-3">
           <div className="bg-[#E0BBE4] p-2 rounded-lg text-white"><Database size={20}/></div>
@@ -532,7 +630,9 @@ const NursingCaseStudyApp = () => {
             { id: 'meds', label: 'Medication', icon: Pill },
             { id: 'nursing', label: 'Nursing Process', icon: Clipboard },
             { id: 'literature', label: 'Literature Review', icon: Book },
-            { id: 'report', label: 'Final Report (Print)', icon: FileText },
+            { id: 'risk', label: 'Risk Assess', icon: ShieldAlert },
+            { id: 'reports', label: 'Reports (Labs/PFT)', icon: FileText },
+            { id: 'report', label: 'Final Report (Print)', icon: Printer },
           ].map(item => (
             <button key={item.id} onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
@@ -628,13 +728,61 @@ const NursingCaseStudyApp = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <button onClick={() => setViewReport('PFT')} className="flex-1 bg-teal-50 border border-teal-100 p-4 rounded-xl flex items-center justify-center gap-2 text-teal-700 font-bold hover:bg-teal-100 transition-colors">
-                  <Wind size={20}/> PFT Result
-                </button>
-                <button onClick={() => setViewReport('ECG')} className="flex-1 bg-rose-50 border border-rose-100 p-4 rounded-xl flex items-center justify-center gap-2 text-rose-700 font-bold hover:bg-rose-100 transition-colors">
-                  <Activity size={20}/> ECG Result
-                </button>
+            </div>
+          )}
+
+          {/* REPORTS TAB */}
+          {activeTab === 'reports' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className={`${theme.card} p-6`}>
+                  <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2"><Scale size={18} className="text-[#D291BC]"/> Intake & Output</h3>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={ioData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                        <XAxis dataKey="date" fontSize={10}/>
+                        <YAxis fontSize={10}/>
+                        <Tooltip/>
+                        <Legend wrapperStyle={{fontSize: '11px'}}/>
+                        <Bar dataKey="intake" fill="#60a5fa" name="Intake"/>
+                        <Bar dataKey="output" fill="#f87171" name="Output"/>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4 justify-center">
+                  <button onClick={() => setViewReport('PFT')} className="bg-teal-50 border border-teal-100 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-teal-700 font-bold hover:bg-teal-100 transition-colors">
+                    <Wind size={32}/> 
+                    <span>Pulmonary Function Test (PFT)</span>
+                    <span className="text-xs font-normal">Date: 12/01 | Result: Abnormal (DLCO 33%)</span>
+                  </button>
+                  <button onClick={() => setViewReport('ECG')} className="bg-rose-50 border border-rose-100 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-rose-700 font-bold hover:bg-rose-100 transition-colors">
+                    <Activity size={32}/> 
+                    <span>Electrocardiogram (ECG)</span>
+                    <span className="text-xs font-normal">Date: 11/25 | Result: Sinus Tachycardia</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* RISK TAB */}
+          {activeTab === 'risk' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div onClick={() => setRiskModal('fall')} className={`${theme.card} p-6 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
+                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><ShieldAlert className="text-amber-500"/> Fall Risk</h4>
+                  <div className="text-4xl font-extrabold text-amber-500 mb-2">35 <span className="text-sm font-normal text-slate-400">/ 125</span></div>
+                  <div className="text-sm font-bold text-amber-700 bg-amber-50 inline-block px-3 py-1 rounded-full mb-4">Standard Risk</div>
+                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
+                </div>
+                <div onClick={() => setRiskModal('pressure')} className={`${theme.card} p-6 border-l-4 border-l-teal-500 cursor-pointer hover:scale-[1.02] transition-transform`}>
+                  <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4"><Layout className="text-teal-500"/> Pressure Ulcer</h4>
+                  <div className="text-4xl font-extrabold text-teal-500 mb-2">22 <span className="text-sm font-normal text-slate-400">/ 23</span></div>
+                  <div className="text-sm font-bold text-teal-700 bg-teal-50 inline-block px-3 py-1 rounded-full mb-4">No Risk</div>
+                  <div className="text-xs text-slate-400 text-right mt-2 flex items-center justify-end gap-1">Click for Details <ArrowDownRight size={12}/></div>
+                </div>
               </div>
             </div>
           )}
@@ -792,6 +940,7 @@ const NursingCaseStudyApp = () => {
       {selectedMed && <MedDetailModal med={selectedMed} onClose={() => setSelectedMed(null)} />}
       {viewReport && <ReportViewerModal type={viewReport} onClose={() => setViewReport(null)} />}
       {selectedVital && <VitalHistoryModal vital={selectedVital} data={vitalData} onClose={() => setSelectedVital(null)} />}
+      {riskModal && <RiskHistoryModal type={riskModal} onClose={() => setRiskModal(null)} />}
     </div>
   );
 };
