@@ -28,7 +28,6 @@ const theme = {
 };
 
 // --- 1. 임상 데이터 (V/S) ---
-[cite_start]// Source: [cite: 468-470]
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 37.5 },
   { time: '11/25 22:00', sbp: 113, dbp: 70, hr: 121, rr: 24, spo2: 93, bt: 38.8 },
@@ -41,7 +40,6 @@ const vitalData = [
   { time: '12/01 10:00', sbp: 120, dbp: 80, hr: 75, rr: 20, spo2: 95, bt: 36.4 },
 ];
 
-[cite_start]// Source: [cite: 135-165, 236-262, 357-380]
 const labData = [
   { date: '11/25', wbc: 23.92, crp: 28.94, procal: 1.69 },
   { date: '11/26', wbc: 21.48, crp: 28.45, procal: 1.50 },
@@ -52,7 +50,6 @@ const labData = [
 ];
 
 // --- 2. 투약 데이터 ---
-[cite_start]// Source: [cite: 428-467]
 const fullMedicationList = [
   { 
     category: "Antibiotics (항생제)",
@@ -93,12 +90,12 @@ const nursingProcessFull = [
     domain: "영역3. 배설/교환",
     diagnosis: "폐포-모세혈관 막 변화와 관련된 가스교환 장애",
     diagnosisTime: "2025. 11. 25. 19:30 (응급실 내원 직후)",
-    rationale: `내원 시 SpO2 87%(Room air)의 심각한 저산소증 확인. ABGA상 pO2 68mmHg, pCO2 29mmHg로 과호흡 동반된 가스교환 불균형 확인됨. Chest CT상 광범위한 염증 및 GGO 소견은 확산 면적 감소를 의미함.`,
-    priorityReason: `매슬로우 욕구 단계 중 최하위인 '생리적 욕구' 중에서도 생명 유지와 직결된 산소화(Oxygenation) 문제로 최우선 순위 설정.`,
+    rationale: "내원 시 SpO2 87%(Room air)의 심각한 저산소증 확인. ABGA상 pO2 68mmHg, pCO2 29mmHg로 과호흡 동반된 가스교환 불균형 확인됨. Chest CT상 광범위한 염증 및 GGO 소견은 확산 면적 감소를 의미함.",
+    priorityReason: "매슬로우 욕구 단계 중 최하위인 '생리적 욕구' 중에서도 생명 유지와 직결된 산소화(Oxygenation) 문제로 최우선 순위 설정.",
     assessment: {
       S_Data: [
-        `"숨이 차서 눕기가 힘들어요."`,
-        `"조금만 움직여도 숨이 찹니다."`
+        "\"숨이 차서 눕기가 힘들어요.\"",
+        "\"조금만 움직여도 숨이 찹니다.\""
       ],
       O_Data: [
         "Dx: Pneumonia in CPFE",
@@ -128,12 +125,12 @@ const nursingProcessFull = [
     domain: "영역11. 안전/보호",
     diagnosis: "감염 반응 및 염증 물질 방출과 관련된 고체온",
     diagnosisTime: "2025. 11. 25. 21:00 (혈액검사 결과 확인 시)",
-    rationale: `체온 38.8도의 고열과 오한. Procalcitonin(1.69), CRP(28.94), WBC(23.92)의 현저한 상승은 전신 감염 상태(Systemic Infection)를 강력히 시사함.`,
-    priorityReason: `고열은 대사율과 산소 소모량을 증가시켜, 이미 손상된 폐기능을 가진 환자의 호흡 부전을 더욱 악화시킬 수 있으므로 즉각적인 중재가 필요함.`,
+    rationale: "체온 38.8도의 고열과 오한. Procalcitonin(1.69), CRP(28.94), WBC(23.92)의 현저한 상승은 전신 감염 상태(Systemic Infection)를 강력히 시사함.",
+    priorityReason: "고열은 대사율과 산소 소모량을 증가시켜, 이미 손상된 폐기능을 가진 환자의 호흡 부전을 더욱 악화시킬 수 있으므로 즉각적인 중재가 필요함.",
     assessment: {
       S_Data: [
-        `"으슬으슬 춥고 온몸이 떨려요."`,
-        `"열이 나는 것 같아요."`
+        "\"으슬으슬 춥고 온몸이 떨려요.\"",
+        "\"열이 나는 것 같아요.\""
       ],
       O_Data: [
         "BT: 38.8℃ (11/25)",
