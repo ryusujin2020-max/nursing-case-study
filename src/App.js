@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-// [Integrity Check] All Icons Imported
 import {
   Activity, Wind, Thermometer, Heart, FileText, User, 
   Clipboard, Stethoscope, ChevronRight, X, Pill, 
@@ -9,27 +8,25 @@ import {
   Clock, CheckSquare, Plus, Book, Layout, Upload, File, Eye, ZoomIn,
   FileSpreadsheet, Microscope, BarChart2, Paperclip
 } from 'lucide-react';
-// [Integrity Check] All Recharts Components Imported
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, ComposedChart, Area, Bar, BarChart
 } from 'recharts';
 
-// --- 🏥 테마 설정 (SMC Deep Blue & Professional) ---
+// --- 🏥 테마 설정 (SMC Deep Blue Style) ---
 const theme = {
   bgMain: 'bg-[#F4F6F8]', 
   sidebar: 'bg-white border-r border-slate-200 z-50 shadow-sm',
-  mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]',
+  mobileNav: 'bg-white/95 backdrop-blur-md border-t border-slate-200 fixed bottom-0 w-full z-50 flex justify-around py-3 pb-5 md:hidden shadow-lg',
   header: 'bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40',
   primaryText: 'text-slate-900',
   secondaryText: 'text-slate-500',
   accentColor: '#005EB8', 
   card: 'bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300',
   buttonPrimary: 'bg-[#005EB8] text-white hover:bg-[#004C99] shadow-sm transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
-  buttonSecondary: 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
 };
 
-// --- 1. 데이터 아카이브 (Fully Restored) ---
+// --- 1. 데이터 정의 (Data Archive) ---
 
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 38.8 },
@@ -46,10 +43,10 @@ const vitalData = [
 const fullLabData = {
   hematology: [
     { name: 'WBC', unit: 'x10³/µL', ref: '4.0-10.0', d1: '23.92 ▲', d2: '21.48 ▲', d3: '12.71 ▲', d4: '10.17', d5: '7.80' },
-    { name: 'RBC', unit: 'x10⁶/µL', ref: '4.0-5.4', d1: '3.68 ▼', d2: '3.42 ▼', d3: '3.36 ▼', d4: '3.27 ▼', d5: '3.50' },
+    { name: 'RBC', unit: 'x10⁶/µL', ref: '4.0-5.4', d1: '3.68 ▼', d2: '3.42 ▼', d3: '3.36 ▼', d4: '3.27 ▼', d5: '-' },
     { name: 'Hb', unit: 'g/dL', ref: '12-16', d1: '12.0', d2: '10.9 ▼', d3: '10.8 ▼', d4: '10.5 ▼', d5: '11.2' },
-    { name: 'Hct', unit: '%', ref: '36-48', d1: '34.4 ▼', d2: '32.3 ▼', d3: '32.1 ▼', d4: '31.4 ▼', d5: '33.0' },
-    { name: 'PLT', unit: 'x10³/µL', ref: '140-400', d1: '141', d2: '134 ▼', d3: '160', d4: '179', d5: '185' },
+    { name: 'Hct', unit: '%', ref: '36-48', d1: '34.4 ▼', d2: '32.3 ▼', d3: '32.1 ▼', d4: '31.4 ▼', d5: '-' },
+    { name: 'PLT', unit: 'x10³/µL', ref: '140-400', d1: '141', d2: '134 ▼', d3: '160', d4: '179', d5: '-' },
   ],
   chemistry: [
     { name: 'BUN/Cr', unit: 'mg/dL', ref: '8-20/0.4-0.8', d1: '9.7 / 0.48', d2: '10.7 / 0.40', d3: '10.8 / 0.37', d4: '8.6 / 0.37', d5: '-' },
@@ -90,7 +87,7 @@ const medTimeline = [
 const medicationList = [
   { 
     id: 1, name: "Ceftriaxone 2g", type: "Antibiotics", route: "IV", dose: "2g q24h", status: "STOP", color: "bg-rose-50 text-rose-700 border-rose-100",
-    details: { class: "3세대 세팔로스포린", moa: "세균의 세포벽 합성을 억제하여 살균 작용.", adultDose: "1일 1회 1~2g 정맥 주사", sideEffects: "설사, 발진, 간수치 상승, 호산구 증가", caution: "페니실린 과민반응 병력, 신부전 환자" }
+    details: { class: "3세대 세팔로스포린", moa: "세균의 세포벽 합성을 억제하여 살균 작용. 그람 음성균에 강력.", adultDose: "1일 1회 1~2g 정맥 주사", sideEffects: "설사, 발진, 간수치 상승, 호산구 증가", caution: "페니실린 과민반응 병력, 신부전 환자" }
   },
   { 
     id: 2, name: "Azithromycin 500mg", type: "Antibiotics", route: "IV", dose: "500mg q24h", status: "STOP", color: "bg-rose-50 text-rose-700 border-rose-100",
@@ -110,7 +107,7 @@ const medicationList = [
   },
   {
     id: 6, name: "Mucomyst", type: "Respiratory", route: "Nebulizer", dose: "800mg QID", status: "ACTIVE", color: "bg-sky-50 text-sky-700 border-sky-100",
-    details: { class: "거담제", moa: "객담의 이황화 결합을 끊어 점도 저하.", adultDose: "1회 1~2 ample 흡입", sideEffects: "구역, 기관지 경련", caution: "천식 환자 주의" }
+    details: { class: "거담제", moa: "객담 점도 저하.", adultDose: "1회 1~2 ample 흡입", sideEffects: "구역, 기관지 경련", caution: "천식 환자 주의" }
   }
 ];
 
@@ -126,11 +123,11 @@ const medLogs = [
 const literatureContent = [
   { 
     title: "1. 폐렴 (Pneumonia) - 심층 고찰", 
-    content: `(1) 정의 및 역학: 폐실질의 급성 염증으로, 지역사회 획득 폐렴(CAP)의 주 원인균은 Streptococcus pneumoniae이다. 본 대상자와 같은 ILD 기저질환자는 고위험군에 속하며, 치명률이 높다.\n\n(2) 병태생리: 병원체가 폐포에 도달하면 대식세포와 호중구가 활성화되어 염증성 사이토카인(IL-1, TNF-a)을 방출한다. 이로 인해 폐포 모세혈관 투과성이 증가하여 삼출물(Exudate)이 축적되고, 가스 교환 면적이 감소하여 V/Q Mismatch 및 Shunt 효과가 발생, 저산소혈증(Hypoxemia)을 초래한다.\n\n(3) 증상: 발열(Fever), 오한(Chills), 화농성 객담(Purulent Sputum), 호흡곤란(Dyspnea), 흉통(Pleuritic Chest Pain). 청진 시 수포음(Crackles)이 들린다.\n\n(4) 치료: 원인균에 따른 항생제 투여가 핵심이다. ATS/IDSA 2019 가이드라인에 따라 기저질환자는 B-lactam + Macrolide 병용 요법을 권장한다.` 
+    content: `(1) 정의 및 역학: 폐실질의 급성 염증으로, 지역사회 획득 폐렴(CAP)의 주 원인균은 Streptococcus pneumoniae이다. 기저질환자(ILD)에게 치명적이다. \n\n(2) 병태생리: 병원체가 기도를 통해 폐포에 도달하면, 숙주의 면역 반응으로 폐포 대식세포와 호중구가 활성화되어 염증성 사이토카인(IL-1, TNF-a)을 방출한다. 이로 인해 폐포 모세혈관 투과성이 증가하여 삼출물(Exudate)이 축적되고, 가스 교환 면적이 감소하여 V/Q Mismatch 및 Shunt 효과가 발생, 저산소혈증(Hypoxemia)을 초래한다.\n\n(3) 증상: 발열(Fever), 오한(Chills), 화농성 객담(Purulent Sputum), 호흡곤란(Dyspnea), 흉통(Pleuritic Chest Pain). 청진 시 수포음(Crackles)이 들리며, 타진 시 탁음(Dullness)이 관찰된다.\n\n(4) 치료: 원인균에 따른 항생제 투여가 핵심이다. ATS/IDSA 2019 가이드라인에 따라 기저질환자는 B-lactam + Macrolide 병용 요법 또는 Respiratory Fluoroquinolone 단독 요법을 권장한다.` 
   },
   { 
     title: "2. 복합 폐섬유증 및 폐기종 (CPFE)", 
-    content: `(1) 정의: 상엽의 폐기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군으로 흡연과 밀접한 관련이 있다.\n\n(2) 병태생리: 폐기종의 과팽창(Hyperinflation)과 섬유화의 용적 감소(Restriction)가 상쇄되어 폐활량(FVC)은 정상이나, 폐 확산능(DLCO)은 현저히 감소하는 특징적인 생리적 해리 현상을 보인다. 이는 폐포-모세혈관 막의 광범위한 파괴를 의미한다.\n\n(3) 임상적 특징: 운동 시 심한 저산소혈증이 나타나며, 폐고혈압(Pulmonary Hypertension) 발생 빈도가 높아 예후가 불량하다.` 
+    content: `(1) 정의: 상엽의 폐기종(Emphysema)과 하엽의 섬유화(Fibrosis)가 공존하는 증후군으로 흡연과 밀접한 관련이 있다.\n\n(2) 생리학적 특징: 폐기종에 의한 과팽창(Hyperinflation)과 섬유화의 용적 감소(Restriction)가 상쇄되어 폐활량(FVC)은 정상이나, 폐 확산능(DLCO)은 현저히 감소하는 특징적인 생리적 해리 현상을 보인다. 이는 폐포-모세혈관 막의 광범위한 파괴를 의미한다.\n\n(3) 임상적 특징: 운동 시 심한 저산소혈증이 나타나며, 폐고혈압(Pulmonary Hypertension) 발생 빈도가 높아 예후가 불량하다.` 
   },
   { 
     title: "3. 쇼그렌 증후군 (Sjogren Syndrome)", 
@@ -138,7 +135,6 @@ const literatureContent = [
   }
 ];
 
-// [FIX] 복구된 Education Content
 const educationContent = [
   {
     title: "CPFE 환자의 호흡 재활 가이드",
@@ -161,7 +157,7 @@ const nursingProcess = [
   {
     id: 1,
     diagnosis: "가스교환 장애 (Impaired Gas Exchange)",
-    definition: "폐포-모세혈관 막에서 산소 및 이산화탄소의 제거 또는 흡수가 결핍된 상태",
+    definition: "폐포에서 과량의 탄산가스 배출 혹은 산소 섭취의 장애가 있는 상태",
     time: "11/25 19:30",
     rationale: "SpO2 87%, ABGA pO2 68mmHg(Hypoxemia), DLCO 33% (Severe diffusion defect)",
     assessment: { s: ["“숨이 차요.”", "“가슴이 답답해요.”"], o: ["SpO2 87% (RA)", "RR 33회/분", "Crackles", "CT: GGO"] },
@@ -377,6 +373,10 @@ const FinalReportView = React.forwardRef(({ fullLabData, medLogs, nursingProcess
           </div>
         ))}
       </ReportSection>
+      
+      <ReportSection title="5. 부록 (Appendix)" pageBreak={true}>
+        <div className="text-xs text-center text-gray-500 p-10">[여기에 검사 결과지(ECG, PFT) 및 I/O 기록지 등 추가 자료가 첨부됩니다.]</div>
+      </ReportSection>
     </div>
   );
 });
@@ -427,15 +427,17 @@ const NursingCaseStudyApp = () => {
         </header>
 
         <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8 print:p-0 print:max-w-none">
+          {/* DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6 animate-fade-in">
                <div className="grid grid-cols-5 gap-4">{[{ label: 'BP', val: '120/80', color: 'text-slate-700', icon: Activity }, { label: 'HR', val: '75', color: 'text-rose-600', icon: Heart }, { label: 'RR', val: '20', color: 'text-emerald-600', icon: Wind }, { label: 'SpO2', val: '95', color: 'text-blue-600', icon: Droplet }, { label: 'BT', val: '36.4', color: 'text-amber-500', icon: Thermometer }].map((v, i) => (<div key={i} onClick={() => setSelectedVital(v)} className={`${theme.card} p-4 cursor-pointer border-l-4 border-l-slate-400 flex flex-col justify-between`}><div className="flex justify-between items-start mb-2"><span className="text-xs text-slate-400 font-bold">{v.label}</span><v.icon size={16} className={v.color}/></div><div className={`text-xl font-bold ${v.color}`}>{v.val}</div></div>))}</div>
-               <div className="grid lg:grid-cols-2 gap-6"><ChartWidget title="Vital Trend (HR/SpO2)" data={vitalData} dataKey="hr" color="#f43f5e" name="HR"/><div className={`${theme.card} p-4 h-64`}><h3 className="font-bold text-slate-700 mb-2 text-sm">Lab Trend (Inflammation)</h3><ResponsiveContainer width="100%" height="100%"><ComposedChart data={inflammationData}><CartesianGrid strokeDasharray="3 3" vertical={false}/><XAxis dataKey="date" fontSize={10}/><YAxis yAxisId="left" fontSize={10} width={30}/><YAxis yAxisId="right" orientation="right" fontSize={10} width={30} domain={[36, 40]} /><Tooltip/><Bar yAxisId="left" dataKey="wbc" fill="#cbd5e1" barSize={20}/><Line yAxisId="left" type="monotone" dataKey="crp" stroke="#f43f5e" strokeWidth={2}/><Line yAxisId="right" type="monotone" dataKey="bt" stroke="#f59e0b" strokeWidth={2}/></ComposedChart></ResponsiveContainer></div></div>
+               <div className="grid lg:grid-cols-2 gap-6"><ChartWidget title="Vital Trend (HR/SpO2)" data={vitalData} dataKey="hr" color="#f43f5e" name="HR"/><div className={`${theme.card} p-4 h-64`}><h3 className="font-bold text-slate-700 mb-2 text-sm">Lab Trend (Inflammation)</h3><ResponsiveContainer width="100%" height="100%"><ComposedChart data={inflammationData}><CartesianGrid strokeDasharray="3 3" vertical={false}/><XAxis dataKey="date" fontSize={10}/><YAxis fontSize={10} width={30}/><Tooltip/><Bar yAxisId="left" dataKey="wbc" fill="#cbd5e1" barSize={20}/><Line yAxisId="left" type="monotone" dataKey="crp" stroke="#f43f5e" strokeWidth={2}/><Line yAxisId="right" type="monotone" dataKey="bt" stroke="#f59e0b" strokeWidth={2}/></ComposedChart></ResponsiveContainer></div></div>
                <div className={`${theme.card} p-6 cursor-pointer hover:border-[#005EB8]`} onClick={() => setLabModal(true)}><div className="flex justify-between items-center mb-4"><h3 className="font-bold text-slate-700 flex items-center gap-2"><Microscope size={18} className="text-[#005EB8]"/> Recent Lab Results (Click for All)</h3><ChevronRight size={18} className="text-slate-400"/></div><div className="overflow-x-auto"><table className="w-full text-sm text-left"><thead className="bg-slate-50 text-slate-500"><tr><th className="p-2">Test</th><th className="p-2">Result</th><th className="p-2">Ref</th><th className="p-2">Status</th></tr></thead><tbody className="divide-y"><tr><td>WBC</td><td className="text-rose-600 font-bold">23.92</td><td>4-10</td><td>High</td></tr><tr><td>CRP</td><td className="text-rose-600 font-bold">28.94</td><td>&lt;0.3</td><td>High</td></tr></tbody></table></div></div>
                <div className="grid md:grid-cols-3 gap-4"><FileUploader label="Chest X-ray" /><FileUploader label="ECG" /><FileUploader label="PFT" /></div>
             </div>
           )}
 
+          {/* MEDS TAB */}
           {activeTab === 'meds' && (
             <div className="space-y-6 animate-fade-in">
                <div className="bg-white p-6 rounded-xl border border-slate-200 overflow-x-auto"><h3 className="font-bold mb-4 flex items-center gap-2 text-slate-700"><Clock className="text-[#005EB8]"/> Medication Timeline</h3><div className="flex min-w-[600px] justify-between relative pt-4 px-4"><div className="absolute top-6 left-4 right-4 h-0.5 bg-slate-200 -z-10"></div>{medTimeline.map((t, i) => (<div key={i} className="flex flex-col items-center gap-2 w-1/5 text-center"><div className={`w-4 h-4 rounded-full border-2 border-white shadow ${t.type==='start'?'bg-blue-500':'bg-slate-400'}`}></div><div><div className="text-xs font-bold bg-slate-100 px-2 rounded">{t.date}</div><div className="text-[10px] text-slate-500 mt-1">{t.event}</div></div></div>))}</div></div>
@@ -443,6 +445,7 @@ const NursingCaseStudyApp = () => {
             </div>
           )}
 
+          {/* OTHER TABS */}
           {activeTab === 'reports' && <div className="space-y-6 animate-fade-in"><div className="grid lg:grid-cols-2 gap-6"><div className={`${theme.card} p-6`}><h3 className="font-bold mb-4 flex gap-2"><Scale className="text-[#005EB8]"/> I/O Balance</h3><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={ioData}><CartesianGrid strokeDasharray="3 3" vertical={false}/><XAxis dataKey="date" fontSize={10}/><YAxis fontSize={10}/><Tooltip/><Legend/><Bar dataKey="intake" fill="#3b82f6" name="Intake"/><Bar dataKey="output" fill="#ef4444" name="Output"/></BarChart></ResponsiveContainer></div></div><div className={`${theme.card} p-6 overflow-y-auto h-80`}><h3 className="font-bold mb-4 flex gap-2"><FileSpreadsheet className="text-[#005EB8]"/> Lab Summary</h3><table className="w-full text-xs text-left"><thead className="bg-slate-50"><tr><th className="p-2">Test</th><th className="p-2">11/25</th><th className="p-2">11/28</th></tr></thead><tbody className="divide-y"><tr><td>WBC</td><td className="text-rose-600 font-bold">23.92</td><td>10.17</td></tr><tr><td>CRP</td><td className="text-rose-600 font-bold">28.94</td><td>11.43</td></tr></tbody></table></div></div></div>}
           {activeTab === 'nursing' && <div className="space-y-8 animate-fade-in">{nursingProcess.map((np, idx) => <div key={idx} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-h-[600px] overflow-y-auto"><h3 className="font-bold text-lg text-[#005EB8] mb-2">#{idx+1} {np.diagnosis}</h3><div className="text-xs text-slate-500 mb-4 bg-slate-50 p-2 rounded break-words"><strong>사유:</strong> {np.rationale}</div><div className="grid md:grid-cols-2 gap-6"><div><h4 className="font-bold text-sm mb-2">Assessment</h4><p className="text-xs break-words">S: {np.assessment.s[0]}</p><p className="text-xs break-words">O: {np.assessment.o[0]}</p></div><div className="h-40 border rounded p-2">{np.chartKey === 'gasExchange' ? <ChartForNursingProcess data={vitalData} chartKey={np.chartKey}/> : <ChartForNursingProcess data={inflammationData} chartKey={np.chartKey}/>}</div></div><div className="mt-4"><h4 className="font-bold text-sm mb-2">Implementation (DAR)</h4><div className="space-y-1 text-xs">{np.implementations.map((imp,k)=><div key={k} className="flex gap-2"><span className="text-slate-400 w-24 shrink-0">{imp.time}</span><span className="break-words">[{imp.type}] {imp.text}</span></div>)}</div></div></div>)}</div>}
           {activeTab === 'risk' && <div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div onClick={() => setRiskModal('fall')} className={`${theme.card} p-6 border-l-4 border-l-amber-500 cursor-pointer`}><h4 className="font-bold text-lg mb-2">Fall Risk</h4><p>35 (Standard)</p></div><div onClick={() => setRiskModal('pressure')} className={`${theme.card} p-6 border-l-4 border-l-teal-500 cursor-pointer`}><h4 className="font-bold text-lg mb-2">Pressure Ulcer</h4><p>22 (No Risk)</p></div></div>}
