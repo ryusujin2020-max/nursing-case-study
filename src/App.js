@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-// [Integrity Check] 모든 아이콘 Import 확인 완료
+// [Integrity Check] All Icons Imported
 import {
   Activity, Wind, Thermometer, Heart, FileText, User, 
   Clipboard, Stethoscope, ChevronRight, X, Pill, 
@@ -7,15 +7,15 @@ import {
   ShieldAlert, Biohazard, ArrowUpRight, ArrowDownRight, 
   BookOpen, Printer, Filter, Database, Settings, Droplet, Scale, 
   Clock, CheckSquare, Plus, Book, Layout, Upload, File, Eye, ZoomIn,
-  FileSpreadsheet, Microscope
+  FileSpreadsheet, Microscope, BarChart2, Paperclip
 } from 'lucide-react';
-// [Integrity Check] 모든 차트 컴포넌트 Import 확인 완료
+// [Integrity Check] All Recharts Components Imported
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, ComposedChart, Area, Bar, BarChart
 } from 'recharts';
 
-// --- 🏥 테마 설정 (SMC Deep Blue & Professional High-End) ---
+// --- 🏥 테마 설정 (SMC Deep Blue & Professional) ---
 const theme = {
   bgMain: 'bg-[#F4F6F8]', 
   sidebar: 'bg-white border-r border-slate-200 z-50 shadow-sm',
@@ -26,11 +26,11 @@ const theme = {
   accentColor: '#005EB8', 
   card: 'bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300',
   buttonPrimary: 'bg-[#005EB8] text-white hover:bg-[#004C99] shadow-sm transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
+  buttonSecondary: 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition-colors rounded-lg px-4 py-2 font-bold text-sm flex items-center gap-2',
 };
 
-// --- 1. 데이터 아카이브 (Fully Restored & Expanded) ---
+// --- 1. 데이터 아카이브 (Fully Restored) ---
 
-// Vital Data (Full Set for Trend Chart)
 const vitalData = [
   { time: '11/25 20:00', sbp: 111, dbp: 72, hr: 115, rr: 25, spo2: 87, bt: 38.8 },
   { time: '11/25 22:00', sbp: 113, dbp: 70, hr: 121, rr: 24, spo2: 93, bt: 38.2 },
@@ -43,7 +43,6 @@ const vitalData = [
   { time: '12/01 10:00', sbp: 120, dbp: 80, hr: 75, rr: 20, spo2: 95, bt: 36.4 },
 ];
 
-// Lab Data (Full Comprehensive Set including Electrolytes & ABGA)
 const fullLabData = {
   hematology: [
     { name: 'WBC', unit: 'x10³/µL', ref: '4.0-10.0', d1: '23.92 ▲', d2: '21.48 ▲', d3: '12.71 ▲', d4: '10.17', d5: '7.80' },
@@ -88,15 +87,14 @@ const medTimeline = [
   { date: '12/01', event: '퇴원약 처방 (MTX 외래 확인)', type: 'end' },
 ];
 
-// Medication List (Restored Colors & Details) - Syntax checked
 const medicationList = [
   { 
     id: 1, name: "Ceftriaxone 2g", type: "Antibiotics", route: "IV", dose: "2g q24h", status: "STOP", color: "bg-rose-50 text-rose-700 border-rose-100",
-    details: { class: "3세대 세팔로스포린", moa: "세균의 세포벽 합성을 억제하여 살균 작용. 그람 음성균에 강력.", adultDose: "1일 1회 1~2g 정맥 주사", sideEffects: "설사, 발진, 간수치 상승, 호산구 증가", caution: "페니실린 과민반응 병력, 신부전 환자" }
+    details: { class: "3세대 세팔로스포린", moa: "세균의 세포벽 합성을 억제하여 살균 작용.", adultDose: "1일 1회 1~2g 정맥 주사", sideEffects: "설사, 발진, 간수치 상승, 호산구 증가", caution: "페니실린 과민반응 병력, 신부전 환자" }
   },
   { 
     id: 2, name: "Azithromycin 500mg", type: "Antibiotics", route: "IV", dose: "500mg q24h", status: "STOP", color: "bg-rose-50 text-rose-700 border-rose-100",
-    details: { class: "마크로라이드계", moa: "리보솜 50S 서브유닛 결합, 단백질 합성 억제. 비정형 폐렴균(Mycoplasma)에 효과적.", adultDose: "500mg 1일 1회 점적 정맥 주사 (1시간 이상)", sideEffects: "오심, 구토, 혈관통, QT 연장", caution: "간기능 장애 주의" }
+    details: { class: "마크로라이드계", moa: "리보솜 50S 서브유닛 결합, 단백질 합성 억제.", adultDose: "500mg 1일 1회 점적 정맥 주사", sideEffects: "오심, 구토, 혈관통, QT 연장", caution: "간기능 장애 주의" }
   },
   { 
     id: 3, name: "Levofloxacin 750mg", type: "Antibiotics", route: "PO", dose: "750mg q24h", status: "ACTIVE", color: "bg-rose-50 text-rose-700 border-rose-100",
@@ -104,7 +102,7 @@ const medicationList = [
   },
   { 
     id: 4, name: "Methotrexate (MTX)", type: "Immuno", route: "PO", dose: "2.5mg 5T Wk", status: "HOLD", color: "bg-amber-50 text-amber-700 border-amber-100",
-    details: { class: "면역억제제", moa: "DNA 합성 방해, 면역 세포 증식 억제.", adultDose: "주 1회 7.5~20mg", sideEffects: "골수 억제, 간독성, 폐독성(간질성 폐렴)", caution: "감염 시 투여 중단. 임산부 금기." }
+    details: { class: "면역억제제", moa: "DNA 합성 방해, 면역 세포 증식 억제.", adultDose: "주 1회 7.5~20mg", sideEffects: "골수 억제, 간독성, 폐독성", caution: "감염 시 투여 중단. 임산부 금기." }
   },
   { 
     id: 5, name: "Ventolin Nebule", type: "Respiratory", route: "Nebulizer", dose: "2.5mg PRN", status: "ACTIVE", color: "bg-sky-50 text-sky-700 border-sky-100",
@@ -125,7 +123,6 @@ const medLogs = [
   { date: '12/01 10:00', drug: 'Discharge Meds', route: 'PO', status: 'Given', note: 'Edu Done' },
 ];
 
-// Literature Content (Highly Detailed)
 const literatureContent = [
   { 
     title: "1. 폐렴 (Pneumonia) - 심층 고찰", 
@@ -141,7 +138,25 @@ const literatureContent = [
   }
 ];
 
-// Nursing Process Data (Full Detail)
+// [FIX] 복구된 Education Content
+const educationContent = [
+  {
+    title: "CPFE 환자의 호흡 재활 가이드",
+    content: "환자분은 폐기종과 폐섬유증이 동반된 CPFE 상태입니다. 평소 폐활량은 정상처럼 보일 수 있으나, 가스 교환 능력(DLCO 33%)이 심각하게 떨어져 있어 운동 시 산소포화도가 급격히 떨어질 수 있습니다.",
+    points: ["숨이 찰 정도의 격렬한 운동 금지", "매일 아침/운동 후 산소포화도 체크 (목표 > 92%)", "평지 걷기 위주로 운동하되, 계단은 천천히"]
+  },
+  {
+    title: "감염 예방 및 면역 관리",
+    content: "면역억제제(MTX) 복용 및 기저 폐질환으로 인해 감염에 매우 취약합니다. 폐렴 재발은 치명적일 수 있으므로 철저한 예방이 필요합니다.",
+    points: ["독감(인플루엔자) 및 폐렴구균 예방접종 필수", "사람 많은 곳 마스크 착용 생활화", "외출 후 반드시 손 씻기 및 가글"]
+  },
+  {
+    title: "퇴원 후 약물 복용 수칙",
+    content: "퇴원 후 경구 항생제(Levofloxacin)를 처방일수까지 정확히 복용해야 내성균 발생을 막을 수 있습니다. 류마티스 약물(MTX)은 12/09 외래 진료 시 재개 여부를 결정합니다.",
+    points: ["항생제는 증상이 없어도 끝까지 복용", "MTX는 의사 지시 전까지 자의적 복용 금지", "관절 통증 시 NSAIDs 대신 타이레놀 우선 복용"]
+  }
+];
+
 const nursingProcess = [
   {
     id: 1,
@@ -412,7 +427,6 @@ const NursingCaseStudyApp = () => {
         </header>
 
         <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8 print:p-0 print:max-w-none">
-          {/* DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6 animate-fade-in">
                <div className="grid grid-cols-5 gap-4">{[{ label: 'BP', val: '120/80', color: 'text-slate-700', icon: Activity }, { label: 'HR', val: '75', color: 'text-rose-600', icon: Heart }, { label: 'RR', val: '20', color: 'text-emerald-600', icon: Wind }, { label: 'SpO2', val: '95', color: 'text-blue-600', icon: Droplet }, { label: 'BT', val: '36.4', color: 'text-amber-500', icon: Thermometer }].map((v, i) => (<div key={i} onClick={() => setSelectedVital(v)} className={`${theme.card} p-4 cursor-pointer border-l-4 border-l-slate-400 flex flex-col justify-between`}><div className="flex justify-between items-start mb-2"><span className="text-xs text-slate-400 font-bold">{v.label}</span><v.icon size={16} className={v.color}/></div><div className={`text-xl font-bold ${v.color}`}>{v.val}</div></div>))}</div>
@@ -422,7 +436,6 @@ const NursingCaseStudyApp = () => {
             </div>
           )}
 
-          {/* MEDS TAB */}
           {activeTab === 'meds' && (
             <div className="space-y-6 animate-fade-in">
                <div className="bg-white p-6 rounded-xl border border-slate-200 overflow-x-auto"><h3 className="font-bold mb-4 flex items-center gap-2 text-slate-700"><Clock className="text-[#005EB8]"/> Medication Timeline</h3><div className="flex min-w-[600px] justify-between relative pt-4 px-4"><div className="absolute top-6 left-4 right-4 h-0.5 bg-slate-200 -z-10"></div>{medTimeline.map((t, i) => (<div key={i} className="flex flex-col items-center gap-2 w-1/5 text-center"><div className={`w-4 h-4 rounded-full border-2 border-white shadow ${t.type==='start'?'bg-blue-500':'bg-slate-400'}`}></div><div><div className="text-xs font-bold bg-slate-100 px-2 rounded">{t.date}</div><div className="text-[10px] text-slate-500 mt-1">{t.event}</div></div></div>))}</div></div>
@@ -430,7 +443,6 @@ const NursingCaseStudyApp = () => {
             </div>
           )}
 
-          {/* OTHER TABS */}
           {activeTab === 'reports' && <div className="space-y-6 animate-fade-in"><div className="grid lg:grid-cols-2 gap-6"><div className={`${theme.card} p-6`}><h3 className="font-bold mb-4 flex gap-2"><Scale className="text-[#005EB8]"/> I/O Balance</h3><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={ioData}><CartesianGrid strokeDasharray="3 3" vertical={false}/><XAxis dataKey="date" fontSize={10}/><YAxis fontSize={10}/><Tooltip/><Legend/><Bar dataKey="intake" fill="#3b82f6" name="Intake"/><Bar dataKey="output" fill="#ef4444" name="Output"/></BarChart></ResponsiveContainer></div></div><div className={`${theme.card} p-6 overflow-y-auto h-80`}><h3 className="font-bold mb-4 flex gap-2"><FileSpreadsheet className="text-[#005EB8]"/> Lab Summary</h3><table className="w-full text-xs text-left"><thead className="bg-slate-50"><tr><th className="p-2">Test</th><th className="p-2">11/25</th><th className="p-2">11/28</th></tr></thead><tbody className="divide-y"><tr><td>WBC</td><td className="text-rose-600 font-bold">23.92</td><td>10.17</td></tr><tr><td>CRP</td><td className="text-rose-600 font-bold">28.94</td><td>11.43</td></tr></tbody></table></div></div></div>}
           {activeTab === 'nursing' && <div className="space-y-8 animate-fade-in">{nursingProcess.map((np, idx) => <div key={idx} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-h-[600px] overflow-y-auto"><h3 className="font-bold text-lg text-[#005EB8] mb-2">#{idx+1} {np.diagnosis}</h3><div className="text-xs text-slate-500 mb-4 bg-slate-50 p-2 rounded break-words"><strong>사유:</strong> {np.rationale}</div><div className="grid md:grid-cols-2 gap-6"><div><h4 className="font-bold text-sm mb-2">Assessment</h4><p className="text-xs break-words">S: {np.assessment.s[0]}</p><p className="text-xs break-words">O: {np.assessment.o[0]}</p></div><div className="h-40 border rounded p-2">{np.chartKey === 'gasExchange' ? <ChartForNursingProcess data={vitalData} chartKey={np.chartKey}/> : <ChartForNursingProcess data={inflammationData} chartKey={np.chartKey}/>}</div></div><div className="mt-4"><h4 className="font-bold text-sm mb-2">Implementation (DAR)</h4><div className="space-y-1 text-xs">{np.implementations.map((imp,k)=><div key={k} className="flex gap-2"><span className="text-slate-400 w-24 shrink-0">{imp.time}</span><span className="break-words">[{imp.type}] {imp.text}</span></div>)}</div></div></div>)}</div>}
           {activeTab === 'risk' && <div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div onClick={() => setRiskModal('fall')} className={`${theme.card} p-6 border-l-4 border-l-amber-500 cursor-pointer`}><h4 className="font-bold text-lg mb-2">Fall Risk</h4><p>35 (Standard)</p></div><div onClick={() => setRiskModal('pressure')} className={`${theme.card} p-6 border-l-4 border-l-teal-500 cursor-pointer`}><h4 className="font-bold text-lg mb-2">Pressure Ulcer</h4><p>22 (No Risk)</p></div></div>}
